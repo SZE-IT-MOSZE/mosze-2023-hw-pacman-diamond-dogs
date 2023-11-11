@@ -1,0 +1,5 @@
+# build mappát nem kell feltölteni
+build/
+
+#kivéve az SDL dll file-okat
+!build/SDL2.dll
