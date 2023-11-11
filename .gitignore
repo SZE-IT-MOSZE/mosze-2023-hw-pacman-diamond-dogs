@@ -1,5 +1,8 @@
 # build mappát nem kell feltölteni
-build/
+/build/
 
 #kivéve az SDL dll file-okat
 !build/SDL2.dll
+
+#SDL szükséges, de nem kell githubra feltölteni az egészet, dependency-ként elég feltüntetni
+/sdl/
