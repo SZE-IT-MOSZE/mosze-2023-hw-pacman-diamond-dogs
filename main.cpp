@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
-#define TEXTURE_W 16
-#define TEXTURE_H 16
+#define TEXTURE_W 32
+#define TEXTURE_H 32
 
 //egy class különböző képek létrehozásához
 class CreateTexture
@@ -101,8 +101,6 @@ int main(int argc, char* argv[])
         //az adott színt az adott rendererre fogja váltani
         SDL_SetRenderDrawColor(renderer,0,0,0,SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
-
-        SDL_SetRenderDrawColor(renderer,255,255,255,SDL_ALPHA_OPAQUE);
         proba1.RenderTexture(renderer);
 
         //jelenlegi renderer kirajzolása
