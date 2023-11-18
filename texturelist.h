@@ -8,8 +8,8 @@ class TextureList
     TextureList(TextureList const&);
     TextureList operator=(TextureList const&);
 
-    std::unordered_map<std::string, SDL_Surface*> surfacemap;
+    std::unordered_map<std::string, SDL_Texture*> texturemap;
     public:
     static TextureList& GetInstance();
-    SDL_Surface* GetSurface(std::string path);
+    SDL_Texture* GetTexture(std::string path);
 };

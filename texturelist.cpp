@@ -17,13 +17,15 @@ TextureList& TextureList::GetInstance()
     static TextureList* instance = new TextureList;
     return *instance;
 }
-SDL_Surface* TextureList::GetSurface(std::string path)
+SDL_Surface* TextureList::GetTexture(std::string path, SDL_Renderer*& renderer)
 {
     
-    if (surfacemap.find(path) == surfacemap.end())
+    if (texturemap.find(path) == texturemap.end())
         {
             SDL_Surface* surface = SDL_LoadBMP(path.c_str());
-            surfacemap.insert(std::make_pair(path,surface));
+            SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer,surface);
+            SDL_FreeSurface(surface);
+            texturemap.insert(std::make_pair(path,texture));
         }
-    return (surfacemap.find(path))->second;
+    return (texturemap.find(path))->second;
 }
