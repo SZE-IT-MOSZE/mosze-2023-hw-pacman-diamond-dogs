@@ -7,7 +7,7 @@ class TextureRect
     SDL_Texture* texture;
 
     public:
-    TextureRect(SDL_Renderer*& renderer, std::string path, int xPos, int yPos, int* xOffset, int* yOffset);
+    TextureRect(SDL_Renderer*& renderer, std::string path, int xPos, int yPos);
     ~TextureRect();
     void RenderTextureRect(SDL_Renderer*& renderer);
 };

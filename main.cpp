@@ -7,20 +7,32 @@
 #include <iostream>
 #include <texturelist.h>
 #include <texture.h>
+#include <memory>
+#include <vector>
+#define SCREEN_W 640
+#define SCREEN_H 512
 #define TEXTURE_W 32
 #define TEXTURE_H 32
 
 int main(int argc, char* argv[])
 {
-    char probapalya[7][7] =
+    int ScreenOffsetX = SCREEN_W / 2;
+    int ScreenOffsetY = SCREEN_H / 2;
+    static int charXPos = 4;
+    static int charYPos = 4;
+
+    int probapalya[10][10] =
     {
-        {1,1,1,1,1,1,1},
-        {1,0,0,0,0,0,1},
-        {1,0,0,0,2,0,1},
-        {1,0,0,0,2,0,1},
-        {1,0,0,0,2,0,1},
-        {1,0,0,0,0,0,1},
-        {1,1,1,1,1,1,1}
+        {0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,1,1,1,1,0,0,0},
+        {0,0,0,1,2,2,1,0,0,0},
+        {0,1,1,1,2,2,1,1,1,0},
+        {0,1,2,2,2,2,2,2,1,0},
+        {0,1,2,2,1,1,2,2,1,0},
+        {0,1,1,2,2,2,2,1,1,0},
+        {0,0,1,2,2,2,2,1,0,0},
+        {0,0,1,1,1,1,1,1,0,0},
+        {0,0,0,0,0,0,0,0,0,0}
     };
     SDL_Window* window=nullptr;
     SDL_Renderer* renderer=nullptr;
@@ -34,8 +46,37 @@ int main(int argc, char* argv[])
         std::cout << "SDL initialized";
     }
 
-    window = SDL_CreateWindow("MOSZE test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("MOSZE test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 672, 512, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
+
+    SDL_Rect rectmap[40][40];
+    for (int x=0; x < 40; x++)
+    {
+        for (int y=0; y < 40; y++)
+        {
+            rectmap[x][y].x = x*32;
+            rectmap[x][y].y = y*32;
+            rectmap[x][y].w = 32;
+            rectmap[x][y].h = 32;
+        }
+    }
+
+    SDL_Rect character;
+    character.x = ScreenOffsetX;
+    character.y = ScreenOffsetY;
+    character.w = 32;
+    character.h = 32;
+
+    SDL_Surface* surface1 = SDL_LoadBMP("./assets/red.bmp");
+    SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer,surface1);
+    
+    SDL_Surface* surface2 = SDL_LoadBMP("./assets/green.bmp");
+    SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer,surface2);
+
+    SDL_Surface* surface3 = SDL_LoadBMP("./assets/blue.bmp");
+    SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer,surface3);
+
+
 
     bool gameIsRunning = true;
     while(gameIsRunning)
@@ -53,10 +94,68 @@ int main(int argc, char* argv[])
             // SDL_KEYDOWN = bármilyen billentyű lenyomása
             if(event.type == SDL_KEYDOWN)
             {
-                // sima próba 0-ra
-                if(event.key.keysym.sym == SDLK_0)
+                switch (event.key.keysym.sym)
                 {
-                    std::cout << "0 megnyomva";
+                    case SDLK_UP:
+                    {
+                        if (probapalya[charXPos][charYPos - 1] == 1)
+                        {
+                            std::cout << "falnak utkoztem, a fal koordinatai:";
+                            std::cout << charXPos << " " << charYPos-1 << std::endl;
+                            break;
+                        }
+                        else
+                        {
+                            charYPos--;
+                            std::cout << "leptem, a jelenlegi koordinataim: " << charXPos << " " << charYPos << std::endl;
+                            break;
+                        }
+                    }
+                    case SDLK_DOWN:
+                    {
+                        if (probapalya[charXPos][charYPos + 1] == 1)
+                        {
+                            std::cout << "falnak utkoztem, a fal koordinatai:";
+                            std::cout << charXPos << " " << charYPos+1 << std::endl;
+                            break;
+                        }
+                        else
+                        {
+                            charYPos++;
+                            std::cout << "leptem, a jelenlegi koordinataim: " << charXPos << " " << charYPos << std::endl;
+                            break;
+                        }
+                    }
+                    case SDLK_RIGHT:
+                    {
+                        if (probapalya[charXPos + 1][charYPos] == 1)
+                        {
+                            std::cout << "falnak utkoztem, a fal koordinatai:";
+                            std::cout << charXPos+1 << " " << charYPos << std::endl;
+                            break;
+                        }
+                        else
+                        {
+                            charXPos++;
+                            std::cout << "leptem, a jelenlegi koordinataim: " << charXPos << " " << charYPos << std::endl;
+                            break;
+                        }
+                    }
+                    case SDLK_LEFT:
+                    {
+                        if (probapalya[charXPos - 1][charYPos] == 1)
+                        {
+                            std::cout << "falnak utkoztem, a fal koordinatai:";
+                            std::cout << charXPos-1 << " " << charYPos << std::endl;
+                            break;
+                        }
+                        else
+                        {
+                            charXPos--;
+                            std::cout << "leptem, a jelenlegi koordinataim: " << charXPos << " " << charYPos << std::endl;
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -65,6 +164,24 @@ int main(int argc, char* argv[])
         SDL_SetRenderDrawColor(renderer,0,0,0,SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
 
+        for (int x=0; x < 10; x++)
+        {
+            for (int y=0; y < 10; y++)
+            {
+                switch (probapalya[x][y])
+                {
+                    case 1:
+                        SDL_RenderCopy(renderer, texture1, NULL, &rectmap[x+ (ScreenOffsetX/TEXTURE_W) - charXPos][y + (ScreenOffsetY/TEXTURE_H) - charYPos]);
+                        break;
+                    case 2:
+                        SDL_RenderCopy(renderer, texture2, NULL, &rectmap[x+ (ScreenOffsetX/TEXTURE_W) - charXPos][y + (ScreenOffsetY/TEXTURE_H) -charYPos]);
+                        break;
+                }
+            }
+        }
+
+
+        SDL_RenderCopy(renderer, texture3, NULL, &character);
         //jelenlegi renderer kirajzolása
         SDL_RenderPresent(renderer);
     }

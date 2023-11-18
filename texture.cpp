@@ -4,10 +4,10 @@
 #include <string>
 #define TEXTURE_W 32
 #define TEXTURE_H 32
-TextureRect::TextureRect(SDL_Renderer*& renderer, std::string path, int xPos, int yPos, int* xOffset, int* yOffset)
+TextureRect::TextureRect(SDL_Renderer*& renderer, std::string path, int xPos, int yPos)
 {
-    rectangle.x = (xPos - (*xOffset * TEXTURE_W));
-    rectangle.y = (yPos - (*yOffset * TEXTURE_H));
+    rectangle.x = xPos;
+    rectangle.y = yPos;
     rectangle.w = TEXTURE_W;
     rectangle.h = TEXTURE_H;
     SDL_Surface* surfaceFromList = TextureList::GetInstance().GetSurface(path);
