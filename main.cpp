@@ -9,8 +9,8 @@
 #include <texture.h>
 #include <memory>
 #include <vector>
-#define SCREEN_W 640
-#define SCREEN_H 512
+const int SCREEN_W = 640;
+const int SCREEN_H = 512;
 #define TEXTURE_W 32
 #define TEXTURE_H 32
 
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
         {0,1,1,2,2,2,2,1,1,0},
         {0,0,1,2,2,2,2,1,0,0},
         {0,0,1,1,1,1,1,1,0,0},
-        {0,0,0,0,0,0,0,0,0,0}
+        {1,0,0,0,0,0,0,0,0,2}
     };
     SDL_Window* window=nullptr;
     SDL_Renderer* renderer=nullptr;
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
         std::cout << "SDL initialized";
     }
 
-    window = SDL_CreateWindow("MOSZE test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 672, 512, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("MOSZE test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
 
     SDL_Rect rectmap[40][40];
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
                 {
                     case SDLK_UP:
                     {
-                        if (probapalya[charXPos][charYPos - 1] == 1)
+                        if (probapalya[charYPos - 1][charXPos] == 1)
                         {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
                             std::cout << charXPos << " " << charYPos-1 << std::endl;
@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
                     }
                     case SDLK_DOWN:
                     {
-                        if (probapalya[charXPos][charYPos + 1] == 1)
+                        if (probapalya[charYPos + 1][charXPos] == 1)
                         {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
                             std::cout << charXPos << " " << charYPos+1 << std::endl;
@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
                     }
                     case SDLK_RIGHT:
                     {
-                        if (probapalya[charXPos + 1][charYPos] == 1)
+                        if (probapalya[charYPos][charXPos + 1] == 1)
                         {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
                             std::cout << charXPos+1 << " " << charYPos << std::endl;
@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
                     }
                     case SDLK_LEFT:
                     {
-                        if (probapalya[charXPos - 1][charYPos] == 1)
+                        if (probapalya[charYPos][charXPos - 1] == 1)
                         {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
                             std::cout << charXPos-1 << " " << charYPos << std::endl;
@@ -168,7 +168,7 @@ int main(int argc, char* argv[])
         {
             for (int y=0; y < 10; y++)
             {
-                switch (probapalya[x][y])
+                switch (probapalya[y][x])
                 {
                     case 1:
                         SDL_RenderCopy(renderer, texture1, NULL, &rectmap[x+ (ScreenOffsetX/TEXTURE_W) - charXPos][y + (ScreenOffsetY/TEXTURE_H) - charYPos]);
