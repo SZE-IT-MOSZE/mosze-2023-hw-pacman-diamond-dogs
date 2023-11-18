@@ -5,6 +5,7 @@
 /build/*
 !/build/assets
 !SDL2.dll
+.cache/
 
 #SDL szükséges, de nem kell githubra feltölteni az egészet, dependency-ként elég feltüntetni
 /SDL/
