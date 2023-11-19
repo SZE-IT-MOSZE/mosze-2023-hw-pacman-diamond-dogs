@@ -1,17 +1,37 @@
-#include <SDL_keycode.h>
 #include <iostream>
+#include <string>
+#include <vector>
+#include <filesystem>
 
 // from SDL
 #include <SDL.h>
 #include <SDL_render.h>
 #include <SDL_surface.h>
-#include <vector>
 
 
 const int SCREEN_W = 640;
 const int SCREEN_H = 512;
 const int TEXTURE_W = 32;
 const int TEXTURE_H = 32;
+
+
+std::filesystem::path* GetNewSaveFile (std::filesystem::path *savePath)
+{
+    savePath->make_preferred();  // \ <-> / OS-szerint preferáltra cseréli
+    int fileNo = 0;
+    bool fileExists = true;
+
+    do {
+        savePath->replace_filename("save_" + std::to_string(fileNo));
+        savePath->replace_extension(".bin");
+
+        fileExists = std::filesystem::exists(*savePath);
+        fileNo++;
+    } while (fileExists);
+
+    return savePath;
+}
+
 
 int main(int argc, char* argv[])
 {
