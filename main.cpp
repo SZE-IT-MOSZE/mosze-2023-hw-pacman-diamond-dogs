@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <fstream>
 
 // from SDL
 #include <SDL.h>
@@ -30,6 +31,39 @@ std::filesystem::path* GetNewSaveFile (std::filesystem::path *savePath)
     } while (fileExists);
 
     return savePath;
+}
+
+
+void SaveMapToFile (std::vector<std::vector<int>> &vMap, std::filesystem::path savePath)
+{
+    std::ofstream saveFile (GetNewSaveFile (&savePath)->c_str ());
+
+    for (auto row : vMap) {
+        for (auto value : row) {
+            saveFile << value;
+        }
+        saveFile << std::endl;
+    }
+    saveFile.close();
+}
+
+
+std::vector<std::vector<int>> OpenSave (std::filesystem::path savePath)
+{
+    std::ifstream saveFile (savePath);
+    std::string line;
+
+    std::vector<int> tmpVec;
+    std::vector<std::vector<int>> returnMatrix;
+
+    while (std::getline (saveFile, line)) {
+        tmpVec.clear ();
+        for (auto value : line) {
+            tmpVec.push_back (int (value - '0'));         // <---- Ömm igen... valami szebb megoldás?!
+        }
+        returnMatrix.push_back (tmpVec);
+    }
+    return returnMatrix;
 }
 
 
