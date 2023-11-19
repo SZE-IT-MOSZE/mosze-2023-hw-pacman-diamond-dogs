@@ -1,8 +1,8 @@
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <filesystem>
-#include <fstream>
 
 // from SDL
 #include <SDL.h>
@@ -18,15 +18,15 @@ const int TEXTURE_H = 32;
 
 std::filesystem::path* GetNewSaveFile (std::filesystem::path *savePath)
 {
-    savePath->make_preferred();  // \ <-> / OS-szerint preferáltra cseréli
+    savePath->make_preferred ();  // \ <-> / OS-szerint preferáltra cseréli
     int fileNo = 0;
     bool fileExists = true;
 
     do {
-        savePath->replace_filename("save_" + std::to_string(fileNo));
-        savePath->replace_extension(".bin");
+        savePath->replace_filename ("save_" + std::to_string(fileNo));
+        savePath->replace_extension (".bin");
 
-        fileExists = std::filesystem::exists(*savePath);
+        fileExists = std::filesystem::exists (*savePath);
         fileNo++;
     } while (fileExists);
 
@@ -44,7 +44,7 @@ void SaveMapToFile (std::vector<std::vector<int>> &vMap, std::filesystem::path s
         }
         saveFile << std::endl;
     }
-    saveFile.close();
+    saveFile.close ();
 }
 
 
@@ -67,7 +67,7 @@ std::vector<std::vector<int>> OpenSave (std::filesystem::path savePath)
 }
 
 
-int main(int argc, char* argv[])
+int main (int argc, char* argv[])
 {
     int ScreenOffsetX = SCREEN_W / 2;
     int ScreenOffsetY = SCREEN_H / 2;
@@ -75,37 +75,37 @@ int main(int argc, char* argv[])
     SDL_Window* window=nullptr;
     SDL_Renderer* renderer=nullptr;
 
-    if(SDL_Init(SDL_INIT_VIDEO) < 0)
+    if(SDL_Init (SDL_INIT_VIDEO) < 0)
         std::cerr << "SDL not initialized: " << SDL_GetError ();
 
 
-    window = SDL_CreateWindow("MOSZE test",
-                              SDL_WINDOWPOS_CENTERED,
-                              SDL_WINDOWPOS_CENTERED,
-                              SCREEN_W,
-                              SCREEN_H,
-                              SDL_WINDOW_SHOWN
-                              );
+    window = SDL_CreateWindow ("MOSZE test",
+                               SDL_WINDOWPOS_CENTERED,
+                               SDL_WINDOWPOS_CENTERED,
+                               SCREEN_W,
+                               SCREEN_H,
+                               SDL_WINDOW_SHOWN
+                               );
 
-    renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer (window, -1, SDL_RENDERER_ACCELERATED);
 
 
     int charXPos = 4;
     int charYPos = 4;
 
     std::vector<std::vector<int>> probapalya =
-    {
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,1,1,1,1,0,0,0},
-        {0,0,0,1,2,2,1,0,0,0},
-        {0,1,1,1,2,2,1,1,1,0},
-        {0,1,2,2,2,2,2,2,1,0},
-        {0,1,2,2,1,1,2,2,1,0},
-        {0,1,1,2,2,2,2,1,1,0},
-        {0,0,1,2,2,2,2,1,0,0},
-        {0,0,1,1,1,1,1,1,0,0},
-        {1,0,0,0,0,0,0,0,0,2}
-    };
+        {
+            {0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,1,1,1,1,0,0,0},
+            {0,0,0,1,2,2,1,0,0,0},
+            {0,1,1,1,2,2,1,1,1,0},
+            {0,1,2,2,2,2,2,2,1,0},
+            {0,1,2,2,1,1,2,2,1,0},
+            {0,1,1,2,2,2,2,1,1,0},
+            {0,0,1,2,2,2,2,1,0,0},
+            {0,0,1,1,1,1,1,1,0,0},
+            {1,0,0,0,0,0,0,0,0,2}
+        };
 
     SDL_Rect rectmap[40][40];
     for (int x=0; x < 40; x++)
@@ -123,27 +123,27 @@ int main(int argc, char* argv[])
     character.w = 32;
     character.h = 32;
 
-    SDL_Surface* surface1 = SDL_LoadBMP("./assets/red.bmp");
-    SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer,surface1);
+    SDL_Surface* surface1 = SDL_LoadBMP ("./assets/red.bmp");
+    SDL_Texture* texture1 = SDL_CreateTextureFromSurface (renderer,surface1);
     
-    SDL_Surface* surface2 = SDL_LoadBMP("./assets/green.bmp");
-    SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer,surface2);
+    SDL_Surface* surface2 = SDL_LoadBMP ("./assets/green.bmp");
+    SDL_Texture* texture2 = SDL_CreateTextureFromSurface (renderer,surface2);
 
-    SDL_Surface* surface3 = SDL_LoadBMP("./assets/blue.bmp");
-    SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer,surface3);
+    SDL_Surface* surface3 = SDL_LoadBMP ("./assets/blue.bmp");
+    SDL_Texture* texture3 = SDL_CreateTextureFromSurface (renderer,surface3);
 
 
     bool gameIsRunning = true;
     SDL_Event event;
 
-    while(gameIsRunning) {                       // event loop, PollEvent-el végig megyünk minden egyes event-en
-        while(SDL_PollEvent(&event)) {           // ezekre különböző módon írunk "válaszokat"
-            if(event.type == SDL_QUIT) {         // SDL_QUIT = sarokban lévő X-el bezárás
+    while (gameIsRunning) {                       // event loop, PollEvent-el végig megyünk minden egyes event-en
+        while (SDL_PollEvent(&event)) {           // ezekre különböző módon írunk "válaszokat"
+            if (event.type == SDL_QUIT) {         // SDL_QUIT = sarokban lévő X-el bezárás
                 gameIsRunning = false;
                 break;
             }
 
-            if(event.type == SDL_KEYDOWN) {     // SDL_KEYDOWN = bármilyen billentyű lenyomása
+            if (event.type == SDL_KEYDOWN) {     // SDL_KEYDOWN = bármilyen billentyű lenyomása
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
                         if (probapalya[charYPos - 1][charXPos] == 1) {
@@ -207,19 +207,19 @@ int main(int argc, char* argv[])
             for (int y = 0; y < probapalya[x].size (); y++) {
                 switch (probapalya[y][x]) {
                     case 1:
-                        SDL_RenderCopy(renderer,
-                                       texture1,
-                                       NULL,
-                                       &rectmap[x + (ScreenOffsetX/TEXTURE_W) - charXPos][y + (ScreenOffsetY/TEXTURE_H) - charYPos]
-                                       );
+                        SDL_RenderCopy (renderer,
+                                        texture1,
+                                        NULL,
+                                        &rectmap[x + (ScreenOffsetX/TEXTURE_W) - charXPos][y + (ScreenOffsetY/TEXTURE_H) - charYPos]
+                                        );
                         break;
 
                     case 2:
-                        SDL_RenderCopy(renderer,
-                                       texture2,
-                                       NULL,
-                                       &rectmap[x + (ScreenOffsetX/TEXTURE_W) - charXPos][y + (ScreenOffsetY/TEXTURE_H) - charYPos]
-                                       );
+                        SDL_RenderCopy (renderer,
+                                        texture2,
+                                        NULL,
+                                        &rectmap[x + (ScreenOffsetX/TEXTURE_W) - charXPos][y + (ScreenOffsetY/TEXTURE_H) - charYPos]
+                                        );
                         break;
 
                     default:
@@ -227,14 +227,14 @@ int main(int argc, char* argv[])
                 }// switch
             }//for (y...
         }// for (x...
-        
-        SDL_RenderCopy(renderer, texture3, NULL, &character); // karakter helyzete
-        SDL_RenderPresent(renderer);            // jelenlegi render kirajzolás
-    }// while (gameIsRunning)
-    
 
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+        SDL_RenderCopy (renderer, texture3, NULL, &character); // karakter helyzete
+        SDL_RenderPresent (renderer);            // jelenlegi render kirajzolás
+    }// while (gameIsRunning)
+
+
+    SDL_DestroyWindow (window);
+    SDL_Quit ();
 
     return 0;
 }
