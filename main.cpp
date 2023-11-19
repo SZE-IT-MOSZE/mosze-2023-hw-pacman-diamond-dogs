@@ -1,3 +1,4 @@
+#include <SDL_keycode.h>
 #include <iostream>
 
 // from SDL
@@ -133,6 +134,10 @@ int main(int argc, char* argv[])
                             std::cout << "leptem, a jelenlegi koordinataim: " << charXPos << " " << charYPos << std::endl;
                             break;
                         }
+
+                    case SDLK_q:
+                        gameIsRunning = false;
+                        break;
 
                     default:
                         continue;
