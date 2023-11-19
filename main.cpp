@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_render.h>
 #include <SDL_surface.h>
+#include <vector>
 
 
 const int SCREEN_W = 640;
@@ -37,7 +38,7 @@ int main(int argc, char* argv[])
     int charXPos = 4;
     int charYPos = 4;
 
-    int probapalya[10][10] =
+    std::vector<std::vector<int>> probapalya =
     {
         {0,0,0,0,0,0,0,0,0,0},
         {0,0,0,1,1,1,1,0,0,0},
@@ -143,8 +144,8 @@ int main(int argc, char* argv[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
 
-        for (int x = 0; x < 10; x++) {
-            for (int y = 0; y < 10; y++) {
+        for (int x = 0; x < probapalya.size (); x++) {
+            for (int y = 0; y < probapalya[x].size (); y++) {
                 switch (probapalya[y][x]) {
                     case 1:
                         SDL_RenderCopy(renderer,
