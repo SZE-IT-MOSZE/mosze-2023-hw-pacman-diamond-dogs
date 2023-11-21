@@ -1,3 +1,4 @@
+#define SDL_MAIN_HANDLED
 #include <iostream>
 
 // from SDL
@@ -10,11 +11,44 @@ const int SCREEN_W = 640;
 const int SCREEN_H = 512;
 const int TEXTURE_W = 32;
 const int TEXTURE_H = 32;
+const int ScreenOffsetX = SCREEN_W / 2;
+const int ScreenOffsetY = SCREEN_H / 2;
+
+class Entity {
+    private:
+    SDL_Texture* entityTexture;
+    SDL_Rect entityRect;
+    int xPos;
+    int yPos;
+    
+    public:
+    Entity(SDL_Renderer*& renderer, std::string path, int x, int y) {
+        xPos = x;
+        yPos = y;
+        entityRect.x = x*32 + ScreenOffsetX/TEXTURE_W;
+        entityRect.y = y*32 + ScreenOffsetY/TEXTURE_H;
+        entityRect.w = TEXTURE_W;
+        entityRect.h = TEXTURE_H;
+        SDL_Surface* surface = SDL_LoadBMP(path.c_str());
+        entityTexture = SDL_CreateTextureFromSurface(renderer, surface);
+    }
+    ~Entity();
+    void RenderEntity(SDL_Renderer*& renderer){
+        SDL_RenderCopy(renderer, entityTexture, NULL, &entityRect);
+    }
+    void MoveEntity(int x, int y){
+        xPos = x;
+        yPos = y;
+    }
+    void UpdateEntityPos(int charXPos, int charYPos){
+        entityRect.x = (xPos + (ScreenOffsetX/TEXTURE_W) - charXPos)*32;
+        entityRect.y = (yPos + (ScreenOffsetY/TEXTURE_H) - charYPos)*32;
+    }
+};
 
 int main(int argc, char* argv[])
 {
-    int ScreenOffsetX = SCREEN_W / 2;
-    int ScreenOffsetY = SCREEN_H / 2;
+
 
     SDL_Window* window=nullptr;
     SDL_Renderer* renderer=nullptr;
@@ -75,7 +109,8 @@ int main(int argc, char* argv[])
 
     SDL_Surface* surface3 = SDL_LoadBMP("./assets/blue.bmp");
     SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer,surface3);
-
+    
+    Entity *testentity = new Entity(renderer,"./assets/blue.bmp",3,3);    //proba az uj classra
 
     bool gameIsRunning = true;
     SDL_Event event;
@@ -167,6 +202,9 @@ int main(int argc, char* argv[])
                 }// switch
             }//for (y...
         }// for (x...
+
+        testentity->UpdateEntityPos(charXPos,charYPos);  //először update-eljük a player helyzetével
+        testentity->RenderEntity(renderer);              //és csak ezután rendereljük, a tile-ok után
         
         SDL_RenderCopy(renderer, texture3, NULL, &character); // karakter helyzete
         SDL_RenderPresent(renderer);            // jelenlegi render kirajzolás
