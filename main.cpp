@@ -1,5 +1,5 @@
 #include <iostream>
-
+#define SDL_MAIN_HANDLED
 // from SDL
 #include <SDL.h>
 #include <SDL_render.h>
