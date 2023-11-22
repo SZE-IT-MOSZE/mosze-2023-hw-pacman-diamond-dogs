@@ -67,13 +67,13 @@ int main(int argc, char* argv[])
     character.w = 32;
     character.h = 32;
 
-    SDL_Surface* surface1 = SDL_LoadBMP("./assets/red.bmp");
+    SDL_Surface* surface1 = SDL_LoadBMP("./assets/wall_left.bmp");
     SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer,surface1);
     
-    SDL_Surface* surface2 = SDL_LoadBMP("./assets/green.bmp");
+    SDL_Surface* surface2 = SDL_LoadBMP("./assets/Tiles1.bmp");
     SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer,surface2);
 
-    SDL_Surface* surface3 = SDL_LoadBMP("./assets/blue.bmp");
+    SDL_Surface* surface3 = SDL_LoadBMP("./assets/wiz.bmp");
     SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer,surface3);
 
 
