@@ -16,9 +16,12 @@ Entity::Entity(SDL_Renderer*& renderer, std::string path, int x, int y) {
     entityRect.h = TEXTURE_H;
     SDL_Surface* surface = SDL_LoadBMP(path.c_str());
     entityTexture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
 }
 
-Entity::~Entity(){};
+Entity::~Entity(){
+    SDL_DestroyTexture(entityTexture);
+};
 
 void Entity::RenderEntity(SDL_Renderer*& renderer){
     SDL_RenderCopy(renderer, entityTexture, NULL, &entityRect);
@@ -32,4 +35,12 @@ void Entity::MoveEntity(int x, int y){
 void Entity::UpdateEntityPos(int charXPos, int charYPos){
     entityRect.x = (xPos + (ScreenOffsetX/TEXTURE_W) - charXPos)*32;
     entityRect.y = (yPos + (ScreenOffsetY/TEXTURE_H) - charYPos)*32;
+};
+
+int Entity::GetXPos(){
+    return xPos;
+};
+
+int Entity::GetYPos(){
+    return yPos;
 };

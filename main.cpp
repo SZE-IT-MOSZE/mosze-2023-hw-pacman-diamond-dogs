@@ -1,6 +1,7 @@
 #define SDL_MAIN_HANDLED
 #include <iostream>
 #include <entity.hpp>
+#include <vector>
 
 // from SDL
 #include <SDL.h>
@@ -66,6 +67,10 @@ int main(int argc, char* argv[])
             rectmap[x][y].h = 32;
         }
     
+    std::vector<Entity*> EntityList;
+    EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",5,5));
+    EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",6,7));
+    EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",10,10));
 
     SDL_Rect character;
     character.x = ScreenOffsetX;
@@ -81,8 +86,6 @@ int main(int argc, char* argv[])
 
     SDL_Surface* surface3 = SDL_LoadBMP("./assets/blue.bmp");
     SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer,surface3);
-
-    Entity *testentity = new Entity(renderer,"./assets/blue.bmp",3,3);    //proba az uj classra
 
     bool gameIsRunning = true;
     SDL_Event event;
@@ -175,8 +178,17 @@ int main(int argc, char* argv[])
             }//for (y...
         }// for (x...
 
-        testentity->UpdateEntityPos(charXPos,charYPos);  //először update-eljük a player helyzetével
-        testentity->RenderEntity(renderer);              //és csak ezután rendereljük, a tile-ok után
+        auto it = EntityList.begin();
+        while (it != EntityList.end()){
+            (*it)->UpdateEntityPos(charXPos,charYPos);
+            (*it)->RenderEntity(renderer);
+
+            if((*it)->GetXPos() == charXPos && (*it)->GetYPos() == charYPos){
+                it = EntityList.erase(it);
+            } else {
+                ++it;
+            }
+        }
         
         SDL_RenderCopy(renderer, texture3, NULL, &character); // karakter helyzete
         SDL_RenderPresent(renderer);            // jelenlegi render kirajzolás
