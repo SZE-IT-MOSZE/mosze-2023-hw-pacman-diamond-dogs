@@ -9,6 +9,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 add_executable(MOSZE
     main.cpp
+    entity.cpp
+    entity.hpp
     #texturelist.cpp
     #texturelist.h
     #texture.cpp

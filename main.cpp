@@ -1,10 +1,9 @@
 #define SDL_MAIN_HANDLED
 #include <iostream>
+#include <entity.hpp>
 
 // from SDL
 #include <SDL.h>
-#include <SDL_render.h>
-#include <SDL_surface.h>
 
 
 const int SCREEN_W = 640;
@@ -13,38 +12,6 @@ const int TEXTURE_W = 32;
 const int TEXTURE_H = 32;
 const int ScreenOffsetX = SCREEN_W / 2;
 const int ScreenOffsetY = SCREEN_H / 2;
-
-class Entity {
-    private:
-    SDL_Texture* entityTexture;
-    SDL_Rect entityRect;
-    int xPos;
-    int yPos;
-    
-    public:
-    Entity(SDL_Renderer*& renderer, std::string path, int x, int y) {
-        xPos = x;
-        yPos = y;
-        entityRect.x = x*32 + ScreenOffsetX/TEXTURE_W;
-        entityRect.y = y*32 + ScreenOffsetY/TEXTURE_H;
-        entityRect.w = TEXTURE_W;
-        entityRect.h = TEXTURE_H;
-        SDL_Surface* surface = SDL_LoadBMP(path.c_str());
-        entityTexture = SDL_CreateTextureFromSurface(renderer, surface);
-    }
-    ~Entity();
-    void RenderEntity(SDL_Renderer*& renderer){
-        SDL_RenderCopy(renderer, entityTexture, NULL, &entityRect);
-    }
-    void MoveEntity(int x, int y){
-        xPos = x;
-        yPos = y;
-    }
-    void UpdateEntityPos(int charXPos, int charYPos){
-        entityRect.x = (xPos + (ScreenOffsetX/TEXTURE_W) - charXPos)*32;
-        entityRect.y = (yPos + (ScreenOffsetY/TEXTURE_H) - charYPos)*32;
-    }
-};
 
 int main(int argc, char* argv[])
 {
@@ -71,18 +38,23 @@ int main(int argc, char* argv[])
     int charXPos = 4;
     int charYPos = 4;
 
-    int probapalya[10][10] =
+    int probapalya[15][15] =
     {
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,1,1,1,1,0,0,0},
-        {0,0,0,1,2,2,1,0,0,0},
-        {0,1,1,1,2,2,1,1,1,0},
-        {0,1,2,2,2,2,2,2,1,0},
-        {0,1,2,2,1,1,2,2,1,0},
-        {0,1,1,2,2,2,2,1,1,0},
-        {0,0,1,2,2,2,2,1,0,0},
-        {0,0,1,1,1,1,1,1,0,0},
-        {1,0,0,0,0,0,0,0,0,2}
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,1,1,1,1,1,1,1,1,1,0,0,0},
+        {0,0,0,1,2,2,2,2,2,2,2,1,0,0,0},
+        {0,0,1,1,2,2,2,1,1,2,2,1,1,1,0},
+        {0,0,1,2,2,2,2,2,2,2,2,2,2,1,0},
+        {1,1,1,2,2,2,2,2,2,2,2,2,2,1,0},
+        {1,2,2,2,2,2,2,2,2,2,2,2,2,1,0},
+        {1,2,2,2,2,2,2,1,1,1,1,2,2,1,0},
+        {1,1,1,2,2,2,2,2,2,2,2,2,2,1,0},
+        {0,0,1,2,2,2,2,2,2,2,2,2,2,1,0},
+        {0,0,1,2,1,1,2,2,2,1,2,2,2,1,0},
+        {0,0,1,2,2,2,2,2,2,1,2,2,1,1,0},
+        {0,0,1,2,2,2,2,2,2,2,2,2,1,0,0},
+        {0,0,1,1,1,1,1,1,1,1,1,1,1,0,0},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,2}
     };
 
     SDL_Rect rectmap[40][40];
@@ -103,13 +75,13 @@ int main(int argc, char* argv[])
 
     SDL_Surface* surface1 = SDL_LoadBMP("./assets/red.bmp");
     SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer,surface1);
-    
+
     SDL_Surface* surface2 = SDL_LoadBMP("./assets/green.bmp");
     SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer,surface2);
 
     SDL_Surface* surface3 = SDL_LoadBMP("./assets/blue.bmp");
     SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer,surface3);
-    
+
     Entity *testentity = new Entity(renderer,"./assets/blue.bmp",3,3);    //proba az uj classra
 
     bool gameIsRunning = true;
@@ -178,8 +150,8 @@ int main(int argc, char* argv[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
 
-        for (int x = 0; x < 10; x++) {
-            for (int y = 0; y < 10; y++) {
+        for (int x = 0; x < 15; x++) {
+            for (int y = 0; y < 15; y++) {
                 switch (probapalya[y][x]) {
                     case 1:
                         SDL_RenderCopy(renderer,
