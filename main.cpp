@@ -1,11 +1,14 @@
 #define SDL_MAIN_HANDLED
 #include <iostream>
-#include <entity.hpp>
+#include <enemy.hpp>
 #include <vector>
+#include <cmath>
+#include <SDL_render.h>
+#include <SDL_surface.h>
+#include <windows.h>
 
 // from SDL
 #include <SDL.h>
-
 
 const int SCREEN_W = 640;
 const int SCREEN_H = 512;
@@ -16,7 +19,7 @@ const int ScreenOffsetY = SCREEN_H / 2;
 
 int main(int argc, char* argv[])
 {
-
+    ShowWindow (GetConsoleWindow(), SW_HIDE);
 
     SDL_Window* window=nullptr;
     SDL_Renderer* renderer=nullptr;
@@ -68,6 +71,8 @@ int main(int argc, char* argv[])
         }
     
     std::vector<Entity*> EntityList;
+    std::vector<Enemy*> EnemyList;
+    EntityList.push_back(new Enemy(renderer,"./assets/purple.bmp",6,6,3));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",5,5));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",6,7));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",10,10));
@@ -87,6 +92,9 @@ int main(int argc, char* argv[])
     SDL_Surface* surface3 = SDL_LoadBMP("./assets/blue.bmp");
     SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer,surface3);
 
+    SDL_Surface* surface4 = SDL_LoadBMP("./assets/purple.bmp");
+    SDL_Texture* texture4 = SDL_CreateTextureFromSurface(renderer,surface4);
+
     bool gameIsRunning = true;
     SDL_Event event;
 
@@ -96,7 +104,6 @@ int main(int argc, char* argv[])
                 gameIsRunning = false;
                 break;
             }
-
             if(event.type == SDL_KEYDOWN) {     // SDL_KEYDOWN = bármilyen billentyű lenyomása
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
@@ -178,6 +185,34 @@ int main(int argc, char* argv[])
             }//for (y...
         }// for (x...
 
+        bool inCombat = 0;
+
+        auto it1 = EnemyList.begin();
+        while (it1 != EnemyList.end()){
+            (*it1)->UpdateEntityPos(charXPos,charYPos);
+            (*it1)->RenderEntity(renderer);
+
+            if(((*it1)->GetXPos() == charXPos && std::abs((*it1)->GetYPos()-charYPos)==1) || 
+              ((*it1)->GetXPos() == charXPos && std::abs((*it1)->GetYPos()-charYPos)==1)){
+                inCombat = 1;
+                while(inCombat){
+                    std::cout << "combatban vagyok" << std::endl;
+                    if(event.type == SDL_KEYDOWN){
+                        if(event.key.keysym.sym == SDLK_RETURN){
+                            (*it1)->SetHealth((*it1)->GetHealth()-1);
+                        }
+                        if((*it1)->GetHealth() == 0){
+                            inCombat = 0;
+                        }
+                    }
+                }
+            } else {
+                ++it1;
+            }
+        }
+
+        //egyelőre automatikusan felvesszük
+        //az entityket entitylistből
         auto it = EntityList.begin();
         while (it != EntityList.end()){
             (*it)->UpdateEntityPos(charXPos,charYPos);

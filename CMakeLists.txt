@@ -7,10 +7,12 @@ find_package(SDL2 REQUIRED CONFIG COMPONENTS SDL2main)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-add_executable(MOSZE
+add_executable(MOSZE WIN32
     main.cpp
     entity.cpp
     entity.hpp
+    enemy.cpp
+    enemy.hpp
     #texturelist.cpp
     #texturelist.h
     #texture.cpp
@@ -22,6 +24,6 @@ target_include_directories(MOSZE
     ${CMAKE_SOURCE_DIR}
 )
 
-target_link_libraries(MOSZE 
+target_link_libraries(MOSZE
     PRIVATE SDL2::SDL2
 )
