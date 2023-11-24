@@ -1,3 +1,6 @@
+#ifndef NDEBUG
+#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
+#endif
 #define SDL_MAIN_HANDLED
 #include <iostream>
 #include <enemy.hpp>
@@ -5,7 +8,6 @@
 #include <cmath>
 #include <SDL_render.h>
 #include <SDL_surface.h>
-#include <windows.h>
 
 // from SDL
 #include <SDL.h>
@@ -19,15 +21,11 @@ const int ScreenOffsetY = SCREEN_H / 2;
 
 int main(int argc, char* argv[])
 {
-    ShowWindow (GetConsoleWindow(), SW_HIDE);
+    SDL_Init(SDL_INIT_VIDEO);
 
     SDL_Window* window=nullptr;
     SDL_Renderer* renderer=nullptr;
-
-    if(SDL_Init(SDL_INIT_VIDEO) < 0)
-        std::cerr << "SDL not initialized: " << SDL_GetError ();
-
-
+    
     window = SDL_CreateWindow("MOSZE test",
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
@@ -72,7 +70,7 @@ int main(int argc, char* argv[])
     
     std::vector<Entity*> EntityList;
     std::vector<Enemy*> EnemyList;
-    EntityList.push_back(new Enemy(renderer,"./assets/purple.bmp",6,6,3));
+    EnemyList.push_back(new Enemy(renderer,"./assets/purple.bmp",6,6,3));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",5,5));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",6,7));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",10,10));
@@ -194,6 +192,7 @@ int main(int argc, char* argv[])
 
             if(((*it1)->GetXPos() == charXPos && std::abs((*it1)->GetYPos()-charYPos)==1) || 
               ((*it1)->GetXPos() == charXPos && std::abs((*it1)->GetYPos()-charYPos)==1)){
+                std::cout << "egy enemy melle leptem" << std::endl;
                 inCombat = 1;
                 while(inCombat){
                     std::cout << "combatban vagyok" << std::endl;
@@ -220,6 +219,7 @@ int main(int argc, char* argv[])
 
             if((*it)->GetXPos() == charXPos && (*it)->GetYPos() == charYPos){
                 it = EntityList.erase(it);
+                std::cout << "raleptem egy entity-re" << std::endl;
             } else {
                 ++it;
             }

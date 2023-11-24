@@ -7,7 +7,7 @@ find_package(SDL2 REQUIRED CONFIG COMPONENTS SDL2main)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-add_executable(MOSZE WIN32
+add_executable(MOSZE
     main.cpp
     entity.cpp
     entity.hpp
