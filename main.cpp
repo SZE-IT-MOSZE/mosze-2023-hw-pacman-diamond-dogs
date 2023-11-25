@@ -212,8 +212,10 @@ int main(int argc, char* argv[])
         while (it != EnemyList.end()){                  //kulon funkcioba at kell rakni kesobb
             (*it)->UpdateEntityPos(charXPos,charYPos);  //a renderelest, vagy metoduskent atirni
             (*it)->RenderEntity(renderer);
-            if(!inCombat && (((*it)->GetXPos() == charXPos && std::abs((*it)->GetYPos()-charYPos)==1) || 
-              ((*it)->GetXPos() == charXPos && std::abs((*it)->GetYPos()-charYPos)==1))){
+            if(!inCombat && (
+                ((*it)->GetXPos() == charXPos && std::abs((*it)->GetYPos()-charYPos)==1) || 
+                ((*it)->GetYPos() == charYPos && std::abs((*it)->GetXPos()-charXPos)==1)
+                )){
                 std::cout << "egy enemy melle leptem" << std::endl;
                 inCombat = 1;
                 PlayerTarget = *it;
