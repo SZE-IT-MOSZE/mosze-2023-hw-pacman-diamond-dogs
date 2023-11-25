@@ -207,13 +207,13 @@ int main(int argc, char* argv[])
             }//for (y...
         }// for (x...
 
-        if (!inCombat){                                 //vegug nezzuk az enemylistet,
+                                                        //vegug nezzuk az enemylistet,
         auto it = EnemyList.begin();                    //de nem rendereljuk az enemyket az if miatt,
         while (it != EnemyList.end()){                  //kulon funkcioba at kell rakni kesobb
             (*it)->UpdateEntityPos(charXPos,charYPos);  //a renderelest, vagy metoduskent atirni
             (*it)->RenderEntity(renderer);
-            if(((*it)->GetXPos() == charXPos && std::abs((*it)->GetYPos()-charYPos)==1) || 
-              ((*it)->GetXPos() == charXPos && std::abs((*it)->GetYPos()-charYPos)==1)){
+            if(!inCombat && (((*it)->GetXPos() == charXPos && std::abs((*it)->GetYPos()-charYPos)==1) || 
+              ((*it)->GetXPos() == charXPos && std::abs((*it)->GetYPos()-charYPos)==1))){
                 std::cout << "egy enemy melle leptem" << std::endl;
                 inCombat = 1;
                 PlayerTarget = *it;
@@ -222,18 +222,17 @@ int main(int argc, char* argv[])
                 ++it;
             }
         }
-        }
 
-        auto it = EntityList.begin();    //egyelőre automatikusan felvesszük
-        while (it != EntityList.end()){  //az entityket entitylistből, ha rajuk lepunk
-            (*it)->UpdateEntityPos(charXPos,charYPos);
-            (*it)->RenderEntity(renderer);
+        auto it2 = EntityList.begin();    //egyelőre automatikusan felvesszük
+        while (it2 != EntityList.end()){  //az entityket entitylistből, ha rajuk lepunk
+            (*it2)->UpdateEntityPos(charXPos,charYPos);
+            (*it2)->RenderEntity(renderer);
 
-            if((*it)->GetXPos() == charXPos && (*it)->GetYPos() == charYPos){
-                it = EntityList.erase(it);
+            if((*it2)->GetXPos() == charXPos && (*it2)->GetYPos() == charYPos){
+                it2 = EntityList.erase(it2);
                 std::cout << "raleptem egy entity-re" << std::endl;
             } else {
-                ++it;
+                ++it2;
             }
         }
         
