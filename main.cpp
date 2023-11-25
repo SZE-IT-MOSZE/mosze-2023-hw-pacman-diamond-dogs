@@ -1,11 +1,9 @@
-#ifndef NDEBUG
-#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-#endif
 #define SDL_MAIN_HANDLED
 #include <iostream>
 #include <enemy.hpp>
 #include <vector>
 #include <cmath>
+#include <algorithm>
 #include <SDL_render.h>
 #include <SDL_surface.h>
 
@@ -68,9 +66,12 @@ int main(int argc, char* argv[])
             rectmap[x][y].h = 32;
         }
     
+    Enemy* PlayerTarget = nullptr;
+    
     std::vector<Entity*> EntityList;
     std::vector<Enemy*> EnemyList;
     EnemyList.push_back(new Enemy(renderer,"./assets/purple.bmp",6,6,3));
+    EnemyList.push_back(new Enemy(renderer,"./assets/purple.bmp",8,8,3));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",5,5));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",6,7));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",10,10));
@@ -95,6 +96,7 @@ int main(int argc, char* argv[])
 
     bool gameIsRunning = true;
     SDL_Event event;
+    bool inCombat = 0;
 
     while(gameIsRunning) {                       // event loop, PollEvent-el végig megyünk minden egyes event-en
         while(SDL_PollEvent(&event)) {           // ezekre különböző módon írunk "válaszokat"
@@ -103,6 +105,7 @@ int main(int argc, char* argv[])
                 break;
             }
             if(event.type == SDL_KEYDOWN) {     // SDL_KEYDOWN = bármilyen billentyű lenyomása
+                if (!inCombat){
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
                         if (probapalya[charYPos - 1][charXPos] == 1) {
@@ -151,6 +154,27 @@ int main(int argc, char* argv[])
                     default:
                         continue;
                 }// switch
+                }
+                if (inCombat){
+                switch (event.key.keysym.sym){
+                    case SDLK_RETURN:
+                        std::cout << "combatban vagyok, entert nyomtam" << std::endl;
+                        break;
+                    case SDLK_0:
+                        std::cout << "kilepek a combatbol, megoltem az ellenseget" << std::endl;
+                        auto it = std::find_if(EnemyList.begin(), EnemyList.end(), [PlayerTarget](Enemy* enemy) {
+                            return enemy = PlayerTarget;  
+                        });
+                        if (it != EnemyList.end()) {
+                            EnemyList.erase(it);
+                            PlayerTarget = nullptr;
+                        } else {
+                            std::cout << "nem talaltam meg a torlendo vector tagot" << std::endl;
+                        }
+                        inCombat = false;
+                        break;
+                }
+                }
             }// if (event.type...
         }// while (poll event...
 
@@ -183,37 +207,25 @@ int main(int argc, char* argv[])
             }//for (y...
         }// for (x...
 
-        bool inCombat = 0;
-
-        auto it1 = EnemyList.begin();
-        while (it1 != EnemyList.end()){
-            (*it1)->UpdateEntityPos(charXPos,charYPos);
-            (*it1)->RenderEntity(renderer);
-
-            if(((*it1)->GetXPos() == charXPos && std::abs((*it1)->GetYPos()-charYPos)==1) || 
-              ((*it1)->GetXPos() == charXPos && std::abs((*it1)->GetYPos()-charYPos)==1)){
+        if (!inCombat){                                 //vegug nezzuk az enemylistet,
+        auto it = EnemyList.begin();                    //de nem rendereljuk az enemyket az if miatt,
+        while (it != EnemyList.end()){                  //kulon funkcioba at kell rakni kesobb
+            (*it)->UpdateEntityPos(charXPos,charYPos);  //a renderelest, vagy metoduskent atirni
+            (*it)->RenderEntity(renderer);
+            if(((*it)->GetXPos() == charXPos && std::abs((*it)->GetYPos()-charYPos)==1) || 
+              ((*it)->GetXPos() == charXPos && std::abs((*it)->GetYPos()-charYPos)==1)){
                 std::cout << "egy enemy melle leptem" << std::endl;
                 inCombat = 1;
-                while(inCombat){
-                    std::cout << "combatban vagyok" << std::endl;
-                    if(event.type == SDL_KEYDOWN){
-                        if(event.key.keysym.sym == SDLK_RETURN){
-                            (*it1)->SetHealth((*it1)->GetHealth()-1);
-                        }
-                        if((*it1)->GetHealth() == 0){
-                            inCombat = 0;
-                        }
-                    }
-                }
+                PlayerTarget = *it;
+                break;
             } else {
-                ++it1;
+                ++it;
             }
         }
+        }
 
-        //egyelőre automatikusan felvesszük
-        //az entityket entitylistből
-        auto it = EntityList.begin();
-        while (it != EntityList.end()){
+        auto it = EntityList.begin();    //egyelőre automatikusan felvesszük
+        while (it != EntityList.end()){  //az entityket entitylistből, ha rajuk lepunk
             (*it)->UpdateEntityPos(charXPos,charYPos);
             (*it)->RenderEntity(renderer);
 
