@@ -13,6 +13,8 @@ add_executable(MOSZE
     entity.hpp
     enemy.cpp
     enemy.hpp
+    player.cpp
+    player.hpp
     #texturelist.cpp
     #texturelist.h
     #texture.cpp

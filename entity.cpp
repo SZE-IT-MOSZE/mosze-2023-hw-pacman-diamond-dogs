@@ -44,3 +44,11 @@ int Entity::GetXPos(){
 int Entity::GetYPos(){
     return yPos;
 };
+
+void Entity::SetXPos(int x){
+    xPos = x;
+};
+
+void Entity::SetYPos(int y){
+   yPos = y;
+};

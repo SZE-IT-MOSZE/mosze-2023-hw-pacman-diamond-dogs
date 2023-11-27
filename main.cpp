@@ -1,6 +1,8 @@
 #define SDL_MAIN_HANDLED
 #include <iostream>
+#include <entity.hpp>
 #include <enemy.hpp>
+#include <player.hpp>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -23,6 +25,8 @@ int main(int argc, char* argv[])
 
     SDL_Window* window=nullptr;
     SDL_Renderer* renderer=nullptr;
+
+    Player MainPlayer(renderer,"./assets/purple.bmp",4,4,10);
     
     window = SDL_CreateWindow("MOSZE test",
                               SDL_WINDOWPOS_CENTERED,
@@ -33,10 +37,6 @@ int main(int argc, char* argv[])
                               );
 
     renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
-
-
-    int charXPos = 4;
-    int charYPos = 4;
 
     int probapalya[15][15] =
     {
@@ -70,8 +70,8 @@ int main(int argc, char* argv[])
     
     std::vector<Entity*> EntityList;
     std::vector<Enemy*> EnemyList;
-    EnemyList.push_back(new Enemy(renderer,"./assets/purple.bmp",6,6,3));
-    EnemyList.push_back(new Enemy(renderer,"./assets/purple.bmp",8,8,3));
+    EnemyList.push_back(new Enemy(renderer,"./assets/purple.bmp",6,6,3,"orc"));
+    EnemyList.push_back(new Enemy(renderer,"./assets/purple.bmp",8,8,3,"orc"));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",5,5));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",6,7));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",10,10));
@@ -81,6 +81,9 @@ int main(int argc, char* argv[])
     character.y = ScreenOffsetY;
     character.w = 32;
     character.h = 32;
+
+    SDL_Surface* surface0 = SDL_LoadBMP("./assets/black.bmp");
+    SDL_Texture* texture0 = SDL_CreateTextureFromSurface(renderer,surface0);
 
     SDL_Surface* surface1 = SDL_LoadBMP("./assets/red.bmp");
     SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer,surface1);
@@ -108,46 +111,46 @@ int main(int argc, char* argv[])
                 if (!inCombat){
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
-                        if (probapalya[charYPos - 1][charXPos] == 1) {
+                        if (probapalya[MainPlayer.GetYPos() - 1][MainPlayer.GetXPos()] == 1) {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
-                            std::cout << charXPos << " " << charYPos-1 << std::endl;
+                            std::cout << MainPlayer.GetXPos() << " " << MainPlayer.GetYPos()-1 << std::endl;
                             break;
                         } else {
-                            charYPos--;
-                            std::cout << "leptem, a jelenlegi koordinataim: " << charXPos << " " << charYPos << std::endl;
+                            MainPlayer.SetYPos(MainPlayer.GetYPos()-1);
+                            std::cout << "leptem, a jelenlegi koordinataim: " << MainPlayer.GetXPos() << " " << MainPlayer.GetYPos() << std::endl;
                             break;
                         }
 
                     case SDLK_DOWN:
-                        if (probapalya[charYPos + 1][charXPos] == 1) {
+                        if (probapalya[MainPlayer.GetYPos() + 1][MainPlayer.GetXPos()] == 1) {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
-                            std::cout << charXPos << " " << charYPos+1 << std::endl;
+                            std::cout << MainPlayer.GetXPos() << " " << MainPlayer.GetYPos()+1 << std::endl;
                             break;
                         } else {
-                            charYPos++;
-                            std::cout << "leptem, a jelenlegi koordinataim: " << charXPos << " " << charYPos << std::endl;
+                            MainPlayer.SetYPos(MainPlayer.GetYPos()+1);
+                            std::cout << "leptem, a jelenlegi koordinataim: " << MainPlayer.GetXPos() << " " << MainPlayer.GetYPos() << std::endl;
                             break;
                         }
 
                     case SDLK_RIGHT:
-                        if (probapalya[charYPos][charXPos + 1] == 1) {
+                        if (probapalya[MainPlayer.GetYPos()][MainPlayer.GetXPos() + 1] == 1) {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
-                            std::cout << charXPos+1 << " " << charYPos << std::endl;
+                            std::cout << MainPlayer.GetXPos()+1 << " " << MainPlayer.GetYPos() << std::endl;
                             break;
                         } else {
-                            charXPos++;
-                            std::cout << "leptem, a jelenlegi koordinataim: " << charXPos << " " << charYPos << std::endl;
+                            MainPlayer.SetXPos(MainPlayer.GetXPos()+1);
+                            std::cout << "leptem, a jelenlegi koordinataim: " << MainPlayer.GetXPos() << " " << MainPlayer.GetYPos() << std::endl;
                             break;
                         }
 
                     case SDLK_LEFT:
-                        if (probapalya[charYPos][charXPos - 1] == 1) {
+                        if (probapalya[MainPlayer.GetYPos()][MainPlayer.GetXPos() - 1] == 1) {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
-                            std::cout << charXPos-1 << " " << charYPos << std::endl;
+                            std::cout << MainPlayer.GetXPos()-1 << " " << MainPlayer.GetYPos() << std::endl;
                             break;
                         } else {
-                            charXPos--;
-                            std::cout << "leptem, a jelenlegi koordinataim: " << charXPos << " " << charYPos << std::endl;
+                            MainPlayer.SetXPos(MainPlayer.GetXPos()-1);
+                            std::cout << "leptem, a jelenlegi koordinataim: " << MainPlayer.GetXPos() << " " << MainPlayer.GetYPos() << std::endl;
                             break;
                         }
 
@@ -163,7 +166,7 @@ int main(int argc, char* argv[])
                     case SDLK_0:
                         std::cout << "kilepek a combatbol, megoltem az ellenseget" << std::endl;
                         auto it = std::find_if(EnemyList.begin(), EnemyList.end(), [PlayerTarget](Enemy* enemy) {
-                            return enemy = PlayerTarget;  
+                            return enemy == PlayerTarget;  
                         });
                         if (it != EnemyList.end()) {
                             EnemyList.erase(it);
@@ -179,8 +182,10 @@ int main(int argc, char* argv[])
         }// while (poll event...
 
         //az adott színt az adott rendererre fogja váltani
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_SetRenderDrawColor(renderer, 40, 80, 100, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
+
+
 
         for (int x = 0; x < 15; x++) {
             for (int y = 0; y < 15; y++) {
@@ -189,7 +194,7 @@ int main(int argc, char* argv[])
                         SDL_RenderCopy(renderer,
                                        texture1,
                                        NULL,
-                                       &rectmap[x + (ScreenOffsetX/TEXTURE_W) - charXPos][y + (ScreenOffsetY/TEXTURE_H) - charYPos]
+                                       &rectmap[x + (ScreenOffsetX/TEXTURE_W) - MainPlayer.GetXPos()][y + (ScreenOffsetY/TEXTURE_H) - MainPlayer.GetYPos()]
                                        );
                         break;
 
@@ -197,7 +202,15 @@ int main(int argc, char* argv[])
                         SDL_RenderCopy(renderer,
                                        texture2,
                                        NULL,
-                                       &rectmap[x + (ScreenOffsetX/TEXTURE_W) - charXPos][y + (ScreenOffsetY/TEXTURE_H) - charYPos]
+                                       &rectmap[x + (ScreenOffsetX/TEXTURE_W) - MainPlayer.GetXPos()][y + (ScreenOffsetY/TEXTURE_H) - MainPlayer.GetYPos()]
+                                       );
+                        break;
+
+                    case 0:
+                        SDL_RenderCopy(renderer,
+                                       texture0,
+                                       NULL,
+                                       &rectmap[x + (ScreenOffsetX/TEXTURE_W) - MainPlayer.GetXPos()][y + (ScreenOffsetY/TEXTURE_H) - MainPlayer.GetYPos()]
                                        );
                         break;
 
@@ -210,11 +223,11 @@ int main(int argc, char* argv[])
                                                         //vegug nezzuk az enemylistet,
         auto it = EnemyList.begin();                    //de nem rendereljuk az enemyket az if miatt,
         while (it != EnemyList.end()){                  //kulon funkcioba at kell rakni kesobb
-            (*it)->UpdateEntityPos(charXPos,charYPos);  //a renderelest, vagy metoduskent atirni
+            (*it)->UpdateEntityPos(MainPlayer.GetXPos(),MainPlayer.GetYPos());  //a renderelest, vagy metoduskent atirni
             (*it)->RenderEntity(renderer);
             if(!inCombat && (
-                ((*it)->GetXPos() == charXPos && std::abs((*it)->GetYPos()-charYPos)==1) || 
-                ((*it)->GetYPos() == charYPos && std::abs((*it)->GetXPos()-charXPos)==1)
+                ((*it)->GetXPos() == MainPlayer.GetXPos() && std::abs((*it)->GetYPos()-MainPlayer.GetYPos())==1) || 
+                ((*it)->GetYPos() == MainPlayer.GetYPos() && std::abs((*it)->GetXPos()-MainPlayer.GetXPos())==1)
                 )){
                 std::cout << "egy enemy melle leptem" << std::endl;
                 inCombat = 1;
@@ -227,18 +240,19 @@ int main(int argc, char* argv[])
 
         auto it2 = EntityList.begin();    //egyelőre automatikusan felvesszük
         while (it2 != EntityList.end()){  //az entityket entitylistből, ha rajuk lepunk
-            (*it2)->UpdateEntityPos(charXPos,charYPos);
+            (*it2)->UpdateEntityPos(MainPlayer.GetXPos(),MainPlayer.GetYPos());
             (*it2)->RenderEntity(renderer);
 
-            if((*it2)->GetXPos() == charXPos && (*it2)->GetYPos() == charYPos){
+            if((*it2)->GetXPos() == MainPlayer.GetXPos() && (*it2)->GetYPos() == MainPlayer.GetYPos()){
                 it2 = EntityList.erase(it2);
                 std::cout << "raleptem egy entity-re" << std::endl;
             } else {
                 ++it2;
             }
         }
-        
-        SDL_RenderCopy(renderer, texture3, NULL, &character); // karakter helyzete
+
+        MainPlayer.RenderEntity(renderer); // karakter helyzete
+        SDL_RenderCopy(renderer, texture3, NULL, &character); 
         SDL_RenderPresent(renderer);            // jelenlegi render kirajzolás
     }// while (gameIsRunning)
     
