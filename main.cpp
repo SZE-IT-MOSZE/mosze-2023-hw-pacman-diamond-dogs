@@ -3,6 +3,7 @@
 #include <entity.hpp>
 #include <enemy.hpp>
 #include <player.hpp>
+#include <inventory.hpp>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -27,6 +28,7 @@ int main(int argc, char* argv[])
     SDL_Renderer* renderer=nullptr;
 
     Player MainPlayer(renderer,"./assets/purple.bmp",4,4,10);
+    Inventory MainInventory;
     
     window = SDL_CreateWindow("MOSZE test",
                               SDL_WINDOWPOS_CENTERED,
@@ -106,7 +108,7 @@ int main(int argc, char* argv[])
                 break;
             }
             if(event.type == SDL_KEYDOWN) {     // SDL_KEYDOWN = bármilyen billentyű lenyomása
-                if (!inCombat){
+                if (!inCombat) {
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
                         if (probapalya[MainPlayer.GetYPos() - 1][MainPlayer.GetXPos()] == 1) {
@@ -177,6 +179,9 @@ int main(int argc, char* argv[])
                 }
                 }
             }// if (event.type...
+            if(event.button.button == SDL_BUTTON_LEFT){
+                std::cout << "bal eger lenyomva" << std::endl;
+            }
         }// while (poll event...
 
         //az adott színt az adott rendererre fogja váltani
