@@ -15,6 +15,7 @@ class Player : public Entity {
     void SetCounter(int newcountervalue);
     int GetCounter();
     int GetHealth();
+    Enemy* GetTarget();
     void SetTarget(Enemy* newTarget);
     void SetHealth(int newHealth);
 };

@@ -66,8 +66,6 @@ int main(int argc, char* argv[])
             rectmap[x][y].h = 32;
         }
     
-    Enemy* PlayerTarget = nullptr;
-    
     std::vector<Entity*> EntityList;
     std::vector<Enemy*> EnemyList;
     EnemyList.push_back(new Enemy(renderer,"./assets/purple.bmp",6,6,3,"orc"));
@@ -165,12 +163,12 @@ int main(int argc, char* argv[])
                         break;
                     case SDLK_0:
                         std::cout << "kilepek a combatbol, megoltem az ellenseget" << std::endl;
-                        auto it = std::find_if(EnemyList.begin(), EnemyList.end(), [PlayerTarget](Enemy* enemy) {
-                            return enemy == PlayerTarget;  
+                        auto it = std::find_if(EnemyList.begin(), EnemyList.end(), [target = MainPlayer.GetTarget()](Enemy* enemy) {
+                            return enemy == target;  
                         });
                         if (it != EnemyList.end()) {
                             EnemyList.erase(it);
-                            PlayerTarget = nullptr;
+                            MainPlayer.SetTarget(nullptr);
                         } else {
                             std::cout << "nem talaltam meg a torlendo vector tagot" << std::endl;
                         }
@@ -231,7 +229,7 @@ int main(int argc, char* argv[])
                 )){
                 std::cout << "egy enemy melle leptem" << std::endl;
                 inCombat = 1;
-                PlayerTarget = *it;
+                MainPlayer.SetTarget(*it);
                 break;
             } else {
                 ++it;

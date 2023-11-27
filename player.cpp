@@ -4,10 +4,6 @@ Player::Player(SDL_Renderer*& renderer, std::string path, int x, int y, int init
     Entity(renderer,path, x, y),
     health(initHealth),
     playerTarget(nullptr){}
-    
-int Player::GetHealth(){
-    return health;
-};
 
 void Player::SetHealth(int newHealth){
     health = newHealth;
@@ -21,6 +17,14 @@ void Player::SetCounter(int newcountervalue){
     counter = newcountervalue;
 };
 
+int Player::GetHealth(){
+    return health;
+};
+
 int Player::GetCounter(){
     return counter;
+};
+
+Enemy* Player::GetTarget(){
+    return playerTarget;
 };
