@@ -20,7 +20,6 @@ const int TEXTURE_H = 32;
 const int ScreenOffsetX = SCREEN_W / 2;
 const int ScreenOffsetY = SCREEN_H / 2;
 
-
 //ez az inventory slotok helyét keresi
 //2 sor, 6 oszlop, minden egyes mező lényegében 32x32
 //de a mezők között van egy kis elválasztó vonal is
@@ -113,6 +112,7 @@ int main(int argc, char* argv[])
     bool gameIsRunning = true;
     SDL_Event event;
     bool inCombat = 0;
+    bool inInventory = 0;
 
     while(gameIsRunning) {                       // event loop, PollEvent-el végig megyünk minden egyes event-en
         int mouseXPos,mouseYPos;
@@ -126,6 +126,17 @@ int main(int argc, char* argv[])
             if(event.type == SDL_KEYDOWN) {     // SDL_KEYDOWN = bármilyen billentyű lenyomása
                 if (!inCombat) {
                 switch (event.key.keysym.sym) {
+                    case SDLK_e:
+                        if (inInventory) {
+                            std::cout << "inInventory = true, atvaltottam false-ra " << std::endl;
+                            inInventory = 0;
+                            break;
+                        } else {
+                            std::cout << "inInventory = false, atvaltottam true-ra " << std::endl;
+                            inInventory = 1;
+                            break;
+                        }
+
                     case SDLK_UP:
                         if (probapalya[MainPlayer.GetYPos() - 1][MainPlayer.GetXPos()] == 1) {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
@@ -195,10 +206,12 @@ int main(int argc, char* argv[])
                 }
                 }
             }// if (event.type...
+            if (inInventory) {
             if(event.button.button == SDL_BUTTON_LEFT){
                 std::cout << "bal eger lenyomva" << std::endl;
                 std::cout << "a koordinatai: " << mouseXPos << ", " << mouseYPos << std::endl;
                 InventorySlotNumber(mouseXPos,mouseYPos);
+            }
             }
         }// while (poll event...
 
@@ -270,7 +283,7 @@ int main(int argc, char* argv[])
         }
 
         MainPlayer.RenderEntity(renderer); // karakter helyzete
-        MainInventory.RenderInventory(renderer);
+        if (inInventory) {MainInventory.RenderInventory(renderer);}
         SDL_RenderPresent(renderer);            // jelenlegi render kirajzolás
 
 
