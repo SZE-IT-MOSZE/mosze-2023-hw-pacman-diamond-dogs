@@ -15,6 +15,7 @@ class Entity {
     ~Entity();
     void RenderEntity(SDL_Renderer* renderer);
     void MoveEntity(int x, int y);
+    void SetRectPos(int rectx, int recty);
     void UpdateEntityPos(int charXPos, int charYPos);
     int GetXPos();
     int GetYPos();

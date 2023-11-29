@@ -16,7 +16,7 @@ class Inventory {
     Inventory(SDL_Renderer* renderer);
     ~Inventory();
     bool AddItem(Entity* item);
-    void RenderInventory(SDL_Renderer* renderer);
+    void RenderInventory(SDL_Renderer* &renderer);
 };
 
 #endif //INVENTORY_HPP

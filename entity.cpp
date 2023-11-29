@@ -32,6 +32,11 @@ void Entity::MoveEntity(int x, int y){
     yPos = y;
 };
 
+void Entity::SetRectPos(int rectx, int recty){
+    entityRect.x = rectx;
+    entityRect.y = recty;
+}
+
 void Entity::UpdateEntityPos(int charXPos, int charYPos){
     entityRect.x = (xPos + (ScreenOffsetX/TEXTURE_W) - charXPos)*32;
     entityRect.y = (yPos + (ScreenOffsetY/TEXTURE_H) - charYPos)*32;

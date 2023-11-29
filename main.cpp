@@ -20,6 +20,31 @@ const int TEXTURE_H = 32;
 const int ScreenOffsetX = SCREEN_W / 2;
 const int ScreenOffsetY = SCREEN_H / 2;
 
+
+//ez az inventory slotok helyét keresi
+//2 sor, 6 oszlop, minden egyes mező lényegében 32x32
+//de a mezők között van egy kis elválasztó vonal is
+//így 34-el osztok, hogy beleszámítsam azt
+int InventorySlotNumber(int x, int y) {
+    int rowNumber;
+    int colNumber = std::floor(x/34)+1;
+    if (y<=512 && y>=477) {
+        rowNumber = 1;
+    } else if (y<=476 && y>=442) {
+        rowNumber = 0;
+    } else {
+        rowNumber = -1;
+    }
+    if ((rowNumber >= 0 && rowNumber <= 1) && (colNumber >=1 && colNumber<=6)){
+        std::cout << (colNumber+rowNumber*6) << std::endl;
+        return (colNumber+rowNumber*6);
+    } else {
+        std::cout << "a sor es oszlop szama: " << rowNumber << ", " << colNumber << std::endl;
+        std::cout << "nem esett bele az inventory slotba" << std::endl;
+        return 0;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     SDL_Init(SDL_INIT_VIDEO);
@@ -27,9 +52,6 @@ int main(int argc, char* argv[])
     SDL_Window* window=nullptr;
     SDL_Renderer* renderer=nullptr;
 
-    Player MainPlayer(renderer,"./assets/purple.bmp",4,4,10);
-    Inventory MainInventory(renderer);
-    
     window = SDL_CreateWindow("MOSZE test",
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
@@ -39,6 +61,9 @@ int main(int argc, char* argv[])
                               );
 
     renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
+
+    Player MainPlayer(renderer,"./assets/black.bmp",4,4,10);
+    Inventory MainInventory(renderer);
 
     int probapalya[15][15] =
     {
@@ -76,7 +101,7 @@ int main(int argc, char* argv[])
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",6,7));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",10,10));
 
-    SDL_Surface* surface0 = SDL_LoadBMP("./assets/black.bmp");
+    SDL_Surface* surface0 = SDL_LoadBMP("./assets/purple.bmp");
     SDL_Texture* texture0 = SDL_CreateTextureFromSurface(renderer,surface0);
 
     SDL_Surface* surface1 = SDL_LoadBMP("./assets/red.bmp");
@@ -173,6 +198,7 @@ int main(int argc, char* argv[])
             if(event.button.button == SDL_BUTTON_LEFT){
                 std::cout << "bal eger lenyomva" << std::endl;
                 std::cout << "a koordinatai: " << mouseXPos << ", " << mouseYPos << std::endl;
+                InventorySlotNumber(mouseXPos,mouseYPos);
             }
         }// while (poll event...
 
@@ -235,8 +261,6 @@ int main(int argc, char* argv[])
         while (it2 != EntityList.end()){  //az entityket entitylistből, ha rajuk lepunk
             (*it2)->UpdateEntityPos(MainPlayer.GetXPos(),MainPlayer.GetYPos());
             (*it2)->RenderEntity(renderer);
-            MainPlayer.RenderEntity(renderer);
-
             if((*it2)->GetXPos() == MainPlayer.GetXPos() && (*it2)->GetYPos() == MainPlayer.GetYPos()){
                 it2 = EntityList.erase(it2);
                 std::cout << "raleptem egy entity-re" << std::endl;
@@ -247,8 +271,10 @@ int main(int argc, char* argv[])
 
         MainPlayer.RenderEntity(renderer); // karakter helyzete
         MainInventory.RenderInventory(renderer);
-
         SDL_RenderPresent(renderer);            // jelenlegi render kirajzolás
+
+
+
     }// while (gameIsRunning)
     
 

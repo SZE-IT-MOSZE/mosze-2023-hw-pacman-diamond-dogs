@@ -9,7 +9,7 @@ const int ScreenOffsetY = SCREEN_H / 2;
 
 Inventory::Inventory(SDL_Renderer* renderer){
     InventoryItems.reserve(12);
-    backgroundRect.x = 217;
+    backgroundRect.x = 0;
     backgroundRect.y = 442;
     backgroundRect.w = 206;
     backgroundRect.h = 70;
@@ -34,6 +34,6 @@ bool Inventory::AddItem(Entity* item) {
     }
 }
 
-void Inventory::RenderInventory(SDL_Renderer* renderer){
+void Inventory::RenderInventory(SDL_Renderer* &renderer){
     SDL_RenderCopy(renderer, backgroundTexture, NULL, &backgroundRect);
 }
