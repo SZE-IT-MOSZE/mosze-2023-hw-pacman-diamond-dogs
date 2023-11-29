@@ -11,7 +11,7 @@ class Player : public Entity {
     int counter;
 
     public:
-    Player(SDL_Renderer*& renderer, std::string path, int x, int y, int initHealth);
+    Player(SDL_Renderer* renderer, std::string path, int x, int y, int initHealth);
     void SetCounter(int newcountervalue);
     int GetCounter();
     int GetHealth();

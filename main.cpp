@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     SDL_Renderer* renderer=nullptr;
 
     Player MainPlayer(renderer,"./assets/purple.bmp",4,4,10);
-    Inventory MainInventory;
+    Inventory MainInventory(renderer);
     
     window = SDL_CreateWindow("MOSZE test",
                               SDL_WINDOWPOS_CENTERED,
@@ -76,12 +76,6 @@ int main(int argc, char* argv[])
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",6,7));
     EntityList.push_back(new Entity(renderer,"./assets/blue.bmp",10,10));
 
-    SDL_Rect character;
-    character.x = ScreenOffsetX;
-    character.y = ScreenOffsetY;
-    character.w = 32;
-    character.h = 32;
-
     SDL_Surface* surface0 = SDL_LoadBMP("./assets/black.bmp");
     SDL_Texture* texture0 = SDL_CreateTextureFromSurface(renderer,surface0);
 
@@ -91,17 +85,14 @@ int main(int argc, char* argv[])
     SDL_Surface* surface2 = SDL_LoadBMP("./assets/green.bmp");
     SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer,surface2);
 
-    SDL_Surface* surface3 = SDL_LoadBMP("./assets/blue.bmp");
-    SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer,surface3);
-
-    SDL_Surface* surface4 = SDL_LoadBMP("./assets/purple.bmp");
-    SDL_Texture* texture4 = SDL_CreateTextureFromSurface(renderer,surface4);
-
     bool gameIsRunning = true;
     SDL_Event event;
     bool inCombat = 0;
 
     while(gameIsRunning) {                       // event loop, PollEvent-el végig megyünk minden egyes event-en
+        int mouseXPos,mouseYPos;
+        Uint32 mouseButtons;
+        mouseButtons = SDL_GetMouseState(&mouseXPos,&mouseYPos);
         while(SDL_PollEvent(&event)) {           // ezekre különböző módon írunk "válaszokat"
             if(event.type == SDL_QUIT) {         // SDL_QUIT = sarokban lévő X-el bezárás
                 gameIsRunning = false;
@@ -181,14 +172,13 @@ int main(int argc, char* argv[])
             }// if (event.type...
             if(event.button.button == SDL_BUTTON_LEFT){
                 std::cout << "bal eger lenyomva" << std::endl;
+                std::cout << "a koordinatai: " << mouseXPos << ", " << mouseYPos << std::endl;
             }
         }// while (poll event...
 
         //az adott színt az adott rendererre fogja váltani
         SDL_SetRenderDrawColor(renderer, 40, 80, 100, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
-
-
 
         for (int x = 0; x < 15; x++) {
             for (int y = 0; y < 15; y++) {
@@ -245,6 +235,7 @@ int main(int argc, char* argv[])
         while (it2 != EntityList.end()){  //az entityket entitylistből, ha rajuk lepunk
             (*it2)->UpdateEntityPos(MainPlayer.GetXPos(),MainPlayer.GetYPos());
             (*it2)->RenderEntity(renderer);
+            MainPlayer.RenderEntity(renderer);
 
             if((*it2)->GetXPos() == MainPlayer.GetXPos() && (*it2)->GetYPos() == MainPlayer.GetYPos()){
                 it2 = EntityList.erase(it2);
@@ -255,7 +246,8 @@ int main(int argc, char* argv[])
         }
 
         MainPlayer.RenderEntity(renderer); // karakter helyzete
-        SDL_RenderCopy(renderer, texture3, NULL, &character); 
+        MainInventory.RenderInventory(renderer);
+
         SDL_RenderPresent(renderer);            // jelenlegi render kirajzolás
     }// while (gameIsRunning)
     

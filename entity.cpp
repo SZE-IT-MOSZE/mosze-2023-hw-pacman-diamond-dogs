@@ -7,7 +7,7 @@ const int TEXTURE_H = 32;
 const int ScreenOffsetX = SCREEN_W / 2;
 const int ScreenOffsetY = SCREEN_H / 2;
 
-Entity::Entity(SDL_Renderer*& renderer, std::string path, int x, int y) {
+Entity::Entity(SDL_Renderer* renderer, std::string path, int x, int y) {
     xPos = x;
     yPos = y;
     entityRect.x = x*32 + ScreenOffsetX/TEXTURE_W;
@@ -23,7 +23,7 @@ Entity::~Entity(){
     SDL_DestroyTexture(entityTexture);
 };
 
-void Entity::RenderEntity(SDL_Renderer*& renderer){
+void Entity::RenderEntity(SDL_Renderer* renderer){
     SDL_RenderCopy(renderer, entityTexture, NULL, &entityRect);
 };
 

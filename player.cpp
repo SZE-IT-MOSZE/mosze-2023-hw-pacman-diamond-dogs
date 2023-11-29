@@ -1,6 +1,6 @@
 #include <player.hpp>
 
-Player::Player(SDL_Renderer*& renderer, std::string path, int x, int y, int initHealth) : 
+Player::Player(SDL_Renderer* renderer, std::string path, int x, int y, int initHealth) : 
     Entity(renderer,path, x, y),
     health(initHealth),
     playerTarget(nullptr){}
