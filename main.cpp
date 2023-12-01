@@ -109,12 +109,14 @@ int main(int argc, char* argv[])
     SDL_Surface* surface2 = SDL_LoadBMP("./assets/green.bmp");
     SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer,surface2);
 
+    unsigned int startTime = 0, endTime;
     bool gameIsRunning = true;
     SDL_Event event;
     bool inCombat = 0;
     bool inInventory = 0;
 
     while(gameIsRunning) {                       // event loop, PollEvent-el végig megyünk minden egyes event-en
+        startTime = SDL_GetTicks();            //ezzel fogom cappelni a framerate-et, a játéknak nem kell végtelen fps, túl nagy igénye lenne
         int mouseXPos,mouseYPos;
         Uint32 mouseButtons;
         mouseButtons = SDL_GetMouseState(&mouseXPos,&mouseYPos);
@@ -195,6 +197,8 @@ int main(int argc, char* argv[])
                         auto it = std::find_if(EnemyList.begin(), EnemyList.end(), [target = MainPlayer.GetTarget()](Enemy* enemy) {
                             return enemy == target;  
                         });
+
+
                         if (it != EnemyList.end()) {
                             EnemyList.erase(it);
                             MainPlayer.SetTarget(nullptr);
@@ -251,7 +255,6 @@ int main(int argc, char* argv[])
                 }// switch
             }//for (y...
         }// for (x...
-
                                                         //vegug nezzuk az enemylistet,
         auto it = EnemyList.begin();                    //de nem rendereljuk az enemyket az if miatt,
         while (it != EnemyList.end()){                  //kulon funkcioba at kell rakni kesobb
@@ -281,13 +284,14 @@ int main(int argc, char* argv[])
                 ++it2;
             }
         }
-
         MainPlayer.RenderEntity(renderer); // karakter helyzete
+
         if (inInventory) {MainInventory.RenderInventory(renderer);}
-        SDL_RenderPresent(renderer);            // jelenlegi render kirajzolás
-
-
-
+        SDL_RenderPresent(renderer);             // jelenlegi render kirajzolás
+        endTime = SDL_GetTicks() - startTime;    // startTime és endTime közti különbség MS-ben
+        if (endTime < 33) {                     // 33-ra nézzük, mivel 1s-et így 30-ra oszt a 33ms, azaz 30 fps-t kapunk
+            SDL_Delay(33 - endTime);             // delayt rakunk be, ha netalán gyorsabban lefut egy loop, mint 33ms
+        }
     }// while (gameIsRunning)
     
 
