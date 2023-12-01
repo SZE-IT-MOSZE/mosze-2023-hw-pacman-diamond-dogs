@@ -58,21 +58,18 @@ int showPrompt(SDL_Renderer* renderer, const std::string& question, std::string 
             else if (promptEvent.type == SDL_MOUSEBUTTONDOWN) {
                 int mouseXPos, mouseYPos;
                 SDL_GetMouseState(&mouseXPos, &mouseYPos);
-
-                // Check if the mouse is over the yes button
                 if (mouseXPos >= 100 && mouseXPos <= 200 && mouseYPos >= 300 && mouseYPos <= 350) {
                     delete yesText;
                     delete noText;
                     delete questionText;
-                    return 1; // Yes button pressed
+                    return 1;
                 }
 
-                // Check if the mouse is over the no button
                 if (mouseXPos >= 300 && mouseXPos <= 400 && mouseYPos >= 300 && mouseYPos <= 350) {
                     delete yesText;
                     delete noText;
                     delete questionText;
-                    return 0; // No button pressed
+                    return 0;
                 }
             }
         }
