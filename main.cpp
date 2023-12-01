@@ -1,4 +1,4 @@
-#define SDL_MAIN_HANDLED
+//#define SDL_MAIN_HANDLED ezt ki kell kommentelni windows-on, attól függően, hogy mivel compile-olsz
 #include <iostream>
 #include <entity.hpp>
 #include <enemy.hpp>
@@ -7,11 +7,10 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-#include <SDL_render.h>
-#include <SDL_surface.h>
 
 // from SDL
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 const int SCREEN_W = 640;
 const int SCREEN_H = 512;
@@ -289,7 +288,7 @@ int main(int argc, char* argv[])
         if (inInventory) {MainInventory.RenderInventory(renderer);}
         SDL_RenderPresent(renderer);             // jelenlegi render kirajzolás
         endTime = SDL_GetTicks() - startTime;    // startTime és endTime közti különbség MS-ben
-        if (endTime < 33) {                     // 33-ra nézzük, mivel 1s-et így 30-ra oszt a 33ms, azaz 30 fps-t kapunk
+        if (endTime < 33) {                      // 33-ra nézzük, mivel 1s-et így 30-ra oszt a 33ms, azaz 30 fps-t kapunk
             SDL_Delay(33 - endTime);             // delayt rakunk be, ha netalán gyorsabban lefut egy loop, mint 33ms
         }
     }// while (gameIsRunning)
