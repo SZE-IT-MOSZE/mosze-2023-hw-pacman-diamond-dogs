@@ -3,8 +3,10 @@
 #és az assets mappát
 !/build
 /build/*
+!/build/fonts
 !/build/assets
 !SDL2.dll
+!SDL2_ttf.dll
 
 #SDL szükséges, de nem kell githubra feltölteni az egészet, dependency-ként elég feltüntetni
 /SDL/
