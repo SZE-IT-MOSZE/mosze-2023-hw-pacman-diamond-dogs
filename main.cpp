@@ -19,7 +19,7 @@ const int TEXTURE_W = 32;
 const int TEXTURE_H = 32;
 const int ScreenOffsetX = SCREEN_W / 2;
 const int ScreenOffsetY = SCREEN_H / 2;
-    
+
 //ez az inventory slotok helyét keresi
 //2 sor, 6 oszlop, minden egyes mező lényegében 32x32
 //de a mezők között van egy kis elválasztó vonal is
@@ -44,10 +44,60 @@ int InventorySlotNumber(int x, int y) {
     }
 }
 
+int showPrompt(SDL_Renderer* renderer, const std::string& question, std::string fontfilepath, int fontsize) {
+    SDL_Event promptEvent;
+    Text *yesText = new Text(fontfilepath, fontsize);
+    Text *noText = new Text(fontfilepath, fontsize);
+    Text *questionText = new Text(fontfilepath, fontsize);
+    bool promptRunning = true;
+    while (promptRunning) {
+        while (SDL_PollEvent(&promptEvent)) {
+            if (promptEvent.type == SDL_QUIT) {
+                promptRunning = false;
+            }
+            else if (promptEvent.type == SDL_MOUSEBUTTONDOWN) {
+                int mouseXPos, mouseYPos;
+                SDL_GetMouseState(&mouseXPos, &mouseYPos);
+
+                // Check if the mouse is over the yes button
+                if (mouseXPos >= 100 && mouseXPos <= 200 && mouseYPos >= 300 && mouseYPos <= 350) {
+                    delete yesText;
+                    delete noText;
+                    delete questionText;
+                    return 1; // Yes button pressed
+                }
+
+                // Check if the mouse is over the no button
+                if (mouseXPos >= 300 && mouseXPos <= 400 && mouseYPos >= 300 && mouseYPos <= 350) {
+                    delete yesText;
+                    delete noText;
+                    delete questionText;
+                    return 0; // No button pressed
+                }
+            }
+        }
+
+        SDL_RenderClear(renderer);
+        questionText->DrawText(renderer, question, 50, 50, 500, 50);
+        SDL_Rect questionRect = { 50, 50, 500, 50 };
+        yesText->DrawText(renderer, "Yes", 100, 300, 100, 50);
+        SDL_Rect yesRect = { 100, 300, 100, 50 };
+        noText->DrawText(renderer, "No", 300, 300, 100, 50);
+        SDL_Rect noRect = { 300, 300, 100, 50 };
+        SDL_RenderPresent(renderer);
+    }
+
+    delete yesText;
+    delete noText;
+    delete questionText;
+
+    return -1; // Error or exit
+}
+
 int main(int argc, char* argv[])
 {
     SDL_Init(SDL_INIT_VIDEO);
-
+    TTF_Init();
     SDL_Window* window=nullptr;
     SDL_Renderer* renderer=nullptr;
 
@@ -60,7 +110,6 @@ int main(int argc, char* argv[])
                               );
 
     renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
-    TTF_Font* myFont = TTF_OpenFont("./fonts/RPGSystem.ttf",16);
     Player MainPlayer(renderer,"./assets/black.bmp",4,4,10);
     Inventory MainInventory(renderer);
 
@@ -134,6 +183,9 @@ int main(int argc, char* argv[])
                             toggleInventory = 1;
                             break;
                         }
+                    case SDLK_t: {
+                            int answer = showPrompt(renderer, "proba","./fonts/RPGSystem.ttf",16);
+                    }
                     case SDLK_UP:
                         if (probapalya[MainPlayer.GetYPos() - 1][MainPlayer.GetXPos()] == 1) {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
@@ -304,8 +356,7 @@ int main(int argc, char* argv[])
             SDL_Delay(33 - endTime);             // delayt rakunk be, ha netalán gyorsabban lefut egy loop, mint 33ms
         }
     }// while (gameIsRunning)
-    
-    TTF_CloseFont(myFont);
+
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
