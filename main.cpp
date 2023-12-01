@@ -4,6 +4,7 @@
 #include <enemy.hpp>
 #include <player.hpp>
 #include <inventory.hpp>
+#include <text.hpp>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -18,7 +19,7 @@ const int TEXTURE_W = 32;
 const int TEXTURE_H = 32;
 const int ScreenOffsetX = SCREEN_W / 2;
 const int ScreenOffsetY = SCREEN_H / 2;
-
+    
 //ez az inventory slotok helyét keresi
 //2 sor, 6 oszlop, minden egyes mező lényegében 32x32
 //de a mezők között van egy kis elválasztó vonal is
@@ -59,7 +60,7 @@ int main(int argc, char* argv[])
                               );
 
     renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
-
+    TTF_Font* myFont = TTF_OpenFont("./fonts/RPGSystem.ttf",16);
     Player MainPlayer(renderer,"./assets/black.bmp",4,4,10);
     Inventory MainInventory(renderer);
 
@@ -113,6 +114,7 @@ int main(int argc, char* argv[])
     SDL_Event event;
     bool inCombat = 0;
     bool inInventory = 0;
+    bool toggleInventory = 0;
 
     while(gameIsRunning) {                       // event loop, PollEvent-el végig megyünk minden egyes event-en
         startTime = SDL_GetTicks();            //ezzel fogom cappelni a framerate-et, a játéknak nem kell végtelen fps, túl nagy igénye lenne
@@ -125,19 +127,13 @@ int main(int argc, char* argv[])
                 break;
             }
             if(event.type == SDL_KEYDOWN) {     // SDL_KEYDOWN = bármilyen billentyű lenyomása
-                if (!inCombat) {
+                if (!inCombat && !inInventory) {
                 switch (event.key.keysym.sym) {
-                    case SDLK_e:
-                        if (inInventory) {
-                            std::cout << "inInventory = true, atvaltottam false-ra " << std::endl;
-                            inInventory = 0;
-                            break;
-                        } else {
-                            std::cout << "inInventory = false, atvaltottam true-ra " << std::endl;
-                            inInventory = 1;
+                    case SDLK_e: {
+                            std::cout << "inInventory false, atvaltom true-ra" << std::endl;
+                            toggleInventory = 1;
                             break;
                         }
-
                     case SDLK_UP:
                         if (probapalya[MainPlayer.GetYPos() - 1][MainPlayer.GetXPos()] == 1) {
                             std::cout << "falnak utkoztem, a fal koordinatai:";
@@ -210,6 +206,13 @@ int main(int argc, char* argv[])
                 }
             }// if (event.type...
             if (inInventory) {
+            if (event.type == SDL_KEYDOWN){
+                if(event.key.keysym.sym == SDLK_e) {
+                    std::cout << "inInventory true, atvaltom false-ra" << std::endl;
+                    toggleInventory = 1;
+                    break;
+                }
+            } 
             if(event.button.button == SDL_BUTTON_LEFT){
                 std::cout << "bal eger lenyomva" << std::endl;
                 std::cout << "a koordinatai: " << mouseXPos << ", " << mouseYPos << std::endl;
@@ -254,6 +257,15 @@ int main(int argc, char* argv[])
                 }// switch
             }//for (y...
         }// for (x...
+        
+        if (toggleInventory) {          //a legelejen atvaltjuk az inInventory-t true-ra E lenyomasara, es utana pedig
+            if (inInventory) {          //megvizsgaljuk, hogy true-e, de mivel tul gyorsan fut a jatek
+                inInventory = false;    //ezert mindkettonel aktivalodik az E lenyomas, igy kulon kell valtogatni a loop utan
+            } else {
+                inInventory = true;
+            }
+            toggleInventory = false;
+        }
                                                         //vegug nezzuk az enemylistet,
         auto it = EnemyList.begin();                    //de nem rendereljuk az enemyket az if miatt,
         while (it != EnemyList.end()){                  //kulon funkcioba at kell rakni kesobb
@@ -283,9 +295,9 @@ int main(int argc, char* argv[])
                 ++it2;
             }
         }
-        MainPlayer.RenderEntity(renderer); // karakter helyzete
 
         if (inInventory) {MainInventory.RenderInventory(renderer);}
+        MainPlayer.RenderEntity(renderer); // karakter helyzete
         SDL_RenderPresent(renderer);             // jelenlegi render kirajzolás
         endTime = SDL_GetTicks() - startTime;    // startTime és endTime közti különbség MS-ben
         if (endTime < 33) {                      // 33-ra nézzük, mivel 1s-et így 30-ra oszt a 33ms, azaz 30 fps-t kapunk
@@ -293,9 +305,8 @@ int main(int argc, char* argv[])
         }
     }// while (gameIsRunning)
     
-
+    TTF_CloseFont(myFont);
     SDL_DestroyWindow(window);
     SDL_Quit();
-
     return 0;
 }

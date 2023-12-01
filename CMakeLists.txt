@@ -20,6 +20,8 @@ add_executable(MOSZE
     player.hpp
     inventory.cpp
     inventory.hpp
+    text.cpp
+    text.hpp
     #texturelist.cpp
     #texturelist.h
     #texture.cpp
