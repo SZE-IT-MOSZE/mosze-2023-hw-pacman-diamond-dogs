@@ -79,11 +79,8 @@ int showPrompt(SDL_Renderer* renderer, const std::string& question, std::string 
 
         SDL_RenderClear(renderer);
         questionText->DrawText(renderer, question, 50, 50, 500, 50);
-        SDL_Rect questionRect = { 50, 50, 500, 50 };
-        yesText->DrawText(renderer, "Yes", 100, 300, 100, 50);
-        SDL_Rect yesRect = { 100, 300, 100, 50 };
-        noText->DrawText(renderer, "No", 300, 300, 100, 50);
-        SDL_Rect noRect = { 300, 300, 100, 50 };
+        yesText->DrawText(renderer, "Igen", 100, 300, 100, 50);
+        noText->DrawText(renderer, "Nem", 340, 300, 100, 50);
         SDL_RenderPresent(renderer);
     }
 
