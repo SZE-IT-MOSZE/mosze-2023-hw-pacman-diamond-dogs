@@ -127,8 +127,44 @@ int main(int argc, char* argv[])
 
     std::vector<Entity*> EntityList;
     std::vector<Enemy*> EnemyList;
-    EnemyList.push_back(new Enemy(renderer, "./assets/purple.bmp", 6, 6, 3, "orc"));
-    EnemyList.push_back(new Enemy(renderer, "./assets/purple.bmp", 8, 8, 3, "orc"));
+
+    for (int enemy = 0; enemy < 10; enemy++)
+    {
+        int r1, r2;
+        bool rosszhely = true;
+        do {
+            r1 = 2 + (rand() % 19);
+            r2 = 2 + (rand() % 19);
+            if (probapalya[r1][r2] == 2) {
+                rosszhely = false;
+            }
+        } while (rosszhely);
+        EnemyList.push_back(new Enemy(renderer, "./assets/purple.bmp", r2, r1, 3, "orc"));
+    }
+
+    for (int entity = 0; entity < 10; entity++)
+    {
+        int r1, r2;
+        bool rosszhely = true;
+        do {
+            r1 = 2 + (rand() % 19);
+            r2 = 2 + (rand() % 19);
+            if (probapalya[r1][r2] == 2) {
+                rosszhely = false;
+            }
+
+            for (auto& enemy : EnemyList) {
+                if (enemy->GetXPos() == r2 && enemy->GetYPos() == r1) {
+                    rosszhely = true;
+                    break;
+                }
+            }
+
+        } while (rosszhely);
+
+        EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", r2, r1));
+    }
+    
     EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", 5, 5));
     EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", 6, 7));
     EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", 10, 10));
