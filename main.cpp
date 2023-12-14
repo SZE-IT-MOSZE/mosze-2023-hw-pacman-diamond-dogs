@@ -133,14 +133,15 @@ int main(int argc, char* argv[])
     EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", 6, 7));
     EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", 10, 10));
 
-    SDL_Surface* surface0 = SDL_LoadBMP("./assets/purple.bmp");
-    SDL_Texture* texture0 = SDL_CreateTextureFromSurface(renderer, surface0);
-
-    SDL_Surface* surface1 = SDL_LoadBMP("./assets/red.bmp");
+    SDL_Surface* surface1 = SDL_LoadBMP("./assets/wall.bmp");
     SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer, surface1);
 
-    SDL_Surface* surface2 = SDL_LoadBMP("./assets/green.bmp");
+    SDL_Surface* surface2 = SDL_LoadBMP("./assets/tiles.bmp");
     SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer, surface2);
+
+    SDL_Surface* surface3 = SDL_LoadBMP("./assets/wizard.bmp");
+    SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer, surface3);
+
 
     unsigned int startTime = 0, endTime;
     bool gameIsRunning = true;
@@ -266,8 +267,8 @@ int main(int argc, char* argv[])
         SDL_SetRenderDrawColor(renderer, 40, 80, 100, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
 
-        for (int x = 0; x < 15; x++) {
-            for (int y = 0; y < 15; y++) {
+        for (int x = 0; x < 21; x++) {
+            for (int y = 0; y < 21; y++) {
                 switch (probapalya[y][x]) {
                 case 1:
                     SDL_RenderCopy(renderer,
