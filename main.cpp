@@ -1,18 +1,22 @@
 #define SDL_MAIN_HANDLED
-#include <iostream>
-#include <entity.hpp>
-#include <enemy.hpp>
-#include <player.hpp>
-#include <inventory.hpp>
-#include <text.hpp>
-#include <vector>
-#include <cmath>
+#include "enemy.hpp"
+#include "entity.hpp"
+#include "inventory.hpp"
+#include "maze.hpp"
+#include "player.hpp"
+#include "text.hpp"
+
+// from stdlib
 #include <algorithm>
-#include "maze.h"
+#include <chrono>
+#include <cmath>
+#include <iostream>
+#include <string>
+#include <vector>
 
 // from SDL
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 
 const int SCREEN_W = 640;
 const int SCREEN_H = 512;
@@ -20,6 +24,8 @@ const int TEXTURE_W = 32;
 const int TEXTURE_H = 32;
 const int ScreenOffsetX = SCREEN_W / 2;
 const int ScreenOffsetY = SCREEN_H / 2;
+
+void RunGame(SDL_Renderer* renderer, std::vector<std::vector<int>> probapalya, Player MainPlayer, std::vector<Entity*> EntityList, std::vector<Enemy*> EnemyList, SDL_Rect rectmap[40][40], Inventory MainInventory);
 
 //ez az inventory slotok helyét keresi
 //2 sor, 6 oszlop, minden egyes mező lényegében 32x32
@@ -111,86 +117,122 @@ int main(int argc, char* argv[])
     Player MainPlayer(renderer, "./assets/black.bmp", 1, 1, 10);
     Inventory MainInventory(renderer);
 
-    Maze maze;
-    maze.generateMaze();
 
-    std::vector<std::vector<int>> probapalya = maze.getMazeMatrix();
+    int rounds = 0;
+    auto score = std::chrono::seconds(0);
 
-    SDL_Rect rectmap[40][40];
-    for (int x = 0; x < 40; x++)
-        for (int y = 0; y < 40; y++) {
-            rectmap[x][y].x = x * 32;
-            rectmap[x][y].y = y * 32;
-            rectmap[x][y].w = 32;
-            rectmap[x][y].h = 32;
+    for (rounds = 0; rounds < 2; rounds++) {
+
+        MainPlayer.SetXPos(1);
+        MainPlayer.SetYPos(1);
+
+        std::vector<std::vector<int>> probapalya; //vektorokat tartalmazó vektor
+        Maze maze;
+        maze.generateMaze();
+        probapalya = maze.getMazeMatrix();
+
+        SDL_Rect rectmap[40][40];
+        for (int x = 0; x < 40; x++)
+            for (int y = 0; y < 40; y++) {
+                rectmap[x][y].x = x * 32;
+                rectmap[x][y].y = y * 32;
+                rectmap[x][y].w = 32;
+                rectmap[x][y].h = 32;
+            }
+
+        std::vector<Entity*> EntityList;
+        std::vector<Enemy*> EnemyList;
+
+        for (int enemy = 0; enemy < 10; enemy++)
+        {
+            int r1, r2;
+            bool rosszhely = true;
+            do {
+                r1 = 2 + (rand() % 19);
+                r2 = 2 + (rand() % 19);
+                if (probapalya[r1][r2] == 2) {
+                    rosszhely = false;
+                }
+            } while (rosszhely);
+            EnemyList.push_back(new Enemy(renderer, "./assets/purple.bmp", r2, r1, 3, "orc"));
         }
 
-    std::vector<Entity*> EntityList;
-    std::vector<Enemy*> EnemyList;
-
-    for (int enemy = 0; enemy < 10; enemy++)
-    {
-        int r1, r2;
-        bool rosszhely = true;
-        do {
-            r1 = 2 + (rand() % 19);
-            r2 = 2 + (rand() % 19);
-            if (probapalya[r1][r2] == 2) {
-                rosszhely = false;
-            }
-        } while (rosszhely);
-        EnemyList.push_back(new Enemy(renderer, "./assets/purple.bmp", r2, r1, 3, "orc"));
-    }
-
-    for (int entity = 0; entity < 10; entity++)
-    {
-        int r1, r2;
-        bool rosszhely = true;
-        do {
-            r1 = 2 + (rand() % 19);
-            r2 = 2 + (rand() % 19);
-            if (probapalya[r1][r2] == 2) {
-                rosszhely = false;
-            }
-
-            for (auto& enemy : EnemyList) {
-                if (enemy->GetXPos() == r2 && enemy->GetYPos() == r1) {
-                    rosszhely = true;
-                    break;
+        for (int entity = 0; entity < 10; entity++)
+        {
+            int r1, r2;
+            bool rosszhely = true;
+            do {
+                r1 = 2 + (rand() % 19);
+                r2 = 2 + (rand() % 19);
+                if (probapalya[r1][r2] == 2) {
+                    rosszhely = false;
                 }
-            }
 
-        } while (rosszhely);
+                for (auto& enemy : EnemyList) {
+                    if (enemy->GetXPos() == r2 && enemy->GetYPos() == r1) {
+                        rosszhely = true;
+                        break;
+                    }
+                }
 
-        EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", r2, r1));
+            } while (rosszhely);
+
+            EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", r2, r1));
+        }
+
+
+        std::chrono::steady_clock::time_point mapStarted = std::chrono::steady_clock::now();
+
+        RunGame(renderer, probapalya, MainPlayer, EntityList, EnemyList, rectmap, MainInventory);
+
+        std::chrono::steady_clock::time_point mapEnded = std::chrono::steady_clock::now();
+        score = score + std::chrono::duration_cast<std::chrono::seconds>(mapEnded - mapStarted);
+        std::clog << score.count() << std::endl;
     }
-    
-    EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", 5, 5));
-    EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", 6, 7));
-    EntityList.push_back(new Entity(renderer, "./assets/blue.bmp", 10, 10));
-
-    SDL_Surface* surface1 = SDL_LoadBMP("./assets/wall.bmp");
-    SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer, surface1);
-
-    SDL_Surface* surface2 = SDL_LoadBMP("./assets/tiles.bmp");
-    SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer, surface2);
-
-    SDL_Surface* surface3 = SDL_LoadBMP("./assets/wizard.bmp");
-    SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer, surface3);
 
 
-    unsigned int startTime = 0, endTime;
+    std::string scoreToText = "Score: " + std::to_string(score.count());
+    showPrompt(renderer, scoreToText, "./fonts/RPGSystem.ttf", 16);
+
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
+}
+
+
+void RunGame(SDL_Renderer* renderer, std::vector<std::vector<int>> probapalya, Player MainPlayer, std::vector<Entity*> EntityList, std::vector<Enemy*> EnemyList, SDL_Rect rectmap[40][40], Inventory MainInventory) {
     bool gameIsRunning = true;
     SDL_Event event;
     bool inCombat = 0;
     bool inInventory = 0;
     bool toggleInventory = 0;
+    unsigned int startTime = 0, endTime;
+
+    SDL_Surface* surface1 = SDL_LoadBMP("./assets/black.bmp");
+    SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer, surface1);
+
+    SDL_Surface* surface2 = SDL_LoadBMP("./assets/red.bmp");
+    SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer, surface2);
+
+    SDL_Surface* surface3 = SDL_LoadBMP("./assets/purple.bmp");
+    SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer, surface3);
+
 
     while (gameIsRunning) {                       // event loop, PollEvent-el végig megyünk minden egyes event-en
+        SDL_Surface* surface1 = SDL_LoadBMP("./assets/black.bmp");
+        SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer, surface1);
+
+        SDL_Surface* surface2 = SDL_LoadBMP("./assets/red.bmp");
+        SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer, surface2);
+
+        SDL_Surface* surface3 = SDL_LoadBMP("./assets/purple.bmp");
+        SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer, surface3);
+
         startTime = SDL_GetTicks();            //ezzel fogom cappelni a framerate-et, a játéknak nem kell végtelen fps, túl nagy igénye lenne
         int mouseXPos, mouseYPos;
         Uint32 mouseButtons;
         mouseButtons = SDL_GetMouseState(&mouseXPos, &mouseYPos);
+
         while (SDL_PollEvent(&event)) {           // ezekre különböző módon írunk "válaszokat"
             if (event.type == SDL_QUIT) {         // SDL_QUIT = sarokban lévő X-el bezárás
                 gameIsRunning = false;
@@ -324,7 +366,7 @@ int main(int argc, char* argv[])
 
                 case 0:
                     SDL_RenderCopy(renderer,
-                        texture0,
+                        texture3,
                         NULL,
                         &rectmap[x + (ScreenOffsetX / TEXTURE_W) - MainPlayer.GetXPos()][y + (ScreenOffsetY / TEXTURE_H) - MainPlayer.GetYPos()]
                     );
@@ -384,9 +426,9 @@ int main(int argc, char* argv[])
         if (endTime < 33) {                      // 33-ra nézzük, mivel 1s-et így 30-ra oszt a 33ms, azaz 30 fps-t kapunk
             SDL_Delay(33 - endTime);             // delayt rakunk be, ha netalán gyorsabban lefut egy loop, mint 33ms
         }
-    }// while (gameIsRunning)
 
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    return 0;
+
+        if ((MainPlayer.GetXPos() == 19) && (MainPlayer.GetYPos() == 19))
+            gameIsRunning = 0;
+    }// while (gameIsRunning)
 }
