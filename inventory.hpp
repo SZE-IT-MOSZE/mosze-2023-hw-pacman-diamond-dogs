@@ -1,4 +1,4 @@
-#ifndef INVENTORY_HPP
+#ifndef INVENTORY_HPP   //inventory header, végül nem volt idõnk ezzel foglalkozni :(
 #define INVENTORY_HPP
 
 

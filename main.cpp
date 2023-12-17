@@ -116,40 +116,15 @@ int main(int argc, char* argv[])
     bool AllEntitiesCollected = true;
     bool hasDied = false;
 
-    const int MAX_ROUNDS = 2;
+    const int MAX_ROUNDS = 2;       //ez adja meg, hogy hány labirintuson kell végigmennünk, hogy kivigyük a játékot
     for (int rounds = 0; rounds < MAX_ROUNDS; rounds++) {
-// reset player pos every round
+// játékos pozícióját visszateszi 1-re amikor új mapra ér
         Player MainPlayer(renderer, "./assets/wizard.bmp", 1, 1, 10);
         MainPlayer.SetXPos(1);
         MainPlayer.SetYPos(1);
 
-// generate map every round
+// map generálása 
         std::vector<std::vector<int>> probapalya;
-/*
-        probapalya = {
-            {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,1, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,1, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,1, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,1, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 1,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 1,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 1,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 1,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 1,1,1,1,1, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 0},
-            {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
-        };
-        */
 
         Maze maze;
         maze.generateMaze();
@@ -165,7 +140,7 @@ int main(int argc, char* argv[])
             }
 
 
-// generate keys
+// kulcsok generálása
         std::vector<Entity*> KeyList;
         for (int key = 0; key < 3; key++)
         {
@@ -183,7 +158,7 @@ int main(int argc, char* argv[])
         }
 
 
-// generate entities every round
+// potik generálása
         std::vector<Entity*> EntityList;
         for (int entity = 0; entity < 10; entity++)
         {
@@ -207,7 +182,7 @@ int main(int argc, char* argv[])
         }
 
         
-// generate enemies every round
+// ellenfelek generálása
         std::vector<Enemy*> EnemyList;
         for (int enemy = 0; enemy < 10; enemy++)
         {
@@ -224,7 +199,7 @@ int main(int argc, char* argv[])
         }
 
 
-// run game 
+// játék lefutása
         std::chrono::steady_clock::time_point mapStarted = std::chrono::steady_clock::now();
 
         if (!hasDied) 
@@ -263,8 +238,8 @@ int main(int argc, char* argv[])
         showLoseScreen(renderer, "./fonts/RPGSystem.ttf", 16);
     } else {
         int scoreAsInt = score.count ();
-        scoreAsInt = 10000 / scoreAsInt;
-        showScore(renderer, std::to_string(scoreAsInt), "./fonts/RPGSystem.ttf", 16);
+        scoreAsInt = 10000 / scoreAsInt;        //pontszámszámláló
+        showScore(renderer, std::to_string(scoreAsInt), "./fonts/RPGSystem.ttf", 16);  //megmutatja a pontszámod ha meghaltál
     
     }
 
@@ -314,7 +289,7 @@ void RunGame(SDL_Renderer* renderer,
             if (event.type == SDL_KEYDOWN) {     // SDL_KEYDOWN = bármilyen billentyű lenyomása
 
                 for (auto& enemy : EnemyList)
-                    enemy->Patrol(probapalya);        //<~~~~~~ itt nem tudtam megoldani hogy ne masolodjon a vektor jelenleg, sry
+                    enemy->Patrol(probapalya);      
 
                 if (!inCombat && !inInventory) {
                     switch (event.key.keysym.sym) {
@@ -444,14 +419,14 @@ void RunGame(SDL_Renderer* renderer,
         }
 
 
-        //vegug nezzuk az enemylistet,
-        auto it = EnemyList.begin();                    //de nem rendereljuk az enemyket az if miatt,
-        while (it != EnemyList.end()) {                  //kulon funkcioba at kell rakni kesobb
-            (*it)->UpdateEntityPos(MainPlayer.GetXPos(), MainPlayer.GetYPos());  //a renderelest, vagy metoduskent atirni
+        //végig nézzük az enemy list-et
+        auto it = EnemyList.begin();                   ,
+        while (it != EnemyList.end()) {                  
+            (*it)->UpdateEntityPos(MainPlayer.GetXPos(), MainPlayer.GetYPos());  
             (*it)->RenderEntity(renderer);
             if (!inCombat && DoTheyCollide((*it)->GetYPos(), (*it)->GetXPos(), MainPlayer.GetYPos(), MainPlayer.GetXPos())) {
 
-                    MainPlayer.SetHealth (MainPlayer.GetHealth () - 3);
+                    MainPlayer.SetHealth (MainPlayer.GetHealth () - 3);     //ennyi életerőt von le, ha megütközöl egy ellenféllel
                     inCombat = true;
                     MainPlayer.SetTarget(*it);
                     std::cout << "CurrentHP = " << MainPlayer.GetHealth () << std::endl;
@@ -477,8 +452,8 @@ void RunGame(SDL_Renderer* renderer,
         }
 
 
-        auto it2 = EntityList.begin();    //egyelőre automatikusan felvesszük
-        while (it2 != EntityList.end()) {  //az entityket entitylistből, ha rajuk lepunk
+        auto it2 = EntityList.begin();    //automatikusan felvesszük az potikat entitylistből, ha rájuk lepunk
+        while (it2 != EntityList.end()) {  
             (*it2)->UpdateEntityPos(MainPlayer.GetXPos(), MainPlayer.GetYPos());
             (*it2)->RenderEntity(renderer);
             if ((*it2)->GetXPos() == MainPlayer.GetXPos() && (*it2)->GetYPos() == MainPlayer.GetYPos()) {
@@ -492,8 +467,8 @@ void RunGame(SDL_Renderer* renderer,
         }
 
 
-        auto it3 = KeyList.begin();    //egyelőre automatikusan felvesszük
-        while (it3 != KeyList.end()) {  //az entityket entitylistből, ha rajuk lepunk
+        auto it3 = KeyList.begin();    //automatikusan felvesszük az kulcsokat keylistből, ha rájuk lepunk
+        while (it3 != KeyList.end()) {  
             (*it3)->UpdateEntityPos(MainPlayer.GetXPos(), MainPlayer.GetYPos());
             (*it3)->RenderEntity(renderer);
             if ((*it3)->GetXPos() == MainPlayer.GetXPos() && (*it3)->GetYPos() == MainPlayer.GetYPos()) {
@@ -529,7 +504,7 @@ void RunGame(SDL_Renderer* renderer,
             *hasDied = true;
         }
 
-        if ((keysGot == 3 && MainPlayer.GetXPos() == 19) && (MainPlayer.GetYPos() == 19)) {
+        if ((keysGot == 3 && MainPlayer.GetXPos() == 19) && (MainPlayer.GetYPos() == 19)) {     // ha megvan mind3 kulcsod és a megfelelő helyen vagy, továbbmehetsz a következő pályára
             gameIsRunning = false;
             gameBeaten = true;
         }
@@ -628,7 +603,7 @@ void showLoseScreen(SDL_Renderer* renderer, std::string fontfilepath, int fontsi
 }
 
 
-bool DoTheyCollide (int enemyYpos, int enemyXpos, int playerYpos, int playerXpos) {
+bool DoTheyCollide (int enemyYpos, int enemyXpos, int playerYpos, int playerXpos) {     //megnézi, hogy egy mezős körzetünkben van e enemy
     if (enemyXpos == playerXpos)
         if (enemyYpos == playerYpos)
             return true;

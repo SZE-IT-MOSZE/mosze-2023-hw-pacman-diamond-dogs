@@ -1,4 +1,4 @@
-#include "entity.hpp"
+#include "entity.hpp"       //entitik pozíciójával (kulcsok, és potik) foglalkozik
 
 
 Entity::Entity(SDL_Renderer* renderer, std::string path, int x, int y) {

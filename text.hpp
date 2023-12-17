@@ -1,4 +1,4 @@
-#ifndef TEXT_HPP
+#ifndef TEXT_HPP        //text fájl header-je
 #define TEXT_HPP
 
 

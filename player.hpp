@@ -1,4 +1,4 @@
-#ifndef PLAYER_HPP
+#ifndef PLAYER_HPP      ////játékos jájl header-e
 #define PLAYER_HPP
 
 

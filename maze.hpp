@@ -1,12 +1,12 @@
-// maze.hpp
+// labirintus generáláshoz header fájlok
 #ifndef MAZE_HPP
 #define MAZE_HPP
 
 #include <iostream>
 #include <vector>
 
-#define GRID_WIDTH 21
-#define GRID_HEIGHT 21
+#define GRID_WIDTH 21       //labirintus magassága
+#define GRID_HEIGHT 21      //labirintus szélessége
 #define NORTH 0
 #define EAST 1
 #define SOUTH 2

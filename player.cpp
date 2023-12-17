@@ -1,4 +1,4 @@
-#include "player.hpp"
+#include "player.hpp"       //játékos adataival foglalkozik
 
 
 Player::Player(SDL_Renderer* renderer, std::string path, int x, int y, int initHealth) : 

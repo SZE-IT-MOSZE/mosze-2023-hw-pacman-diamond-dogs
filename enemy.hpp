@@ -1,4 +1,4 @@
-#ifndef ENEMY_HPP
+#ifndef ENEMY_HPP       //ellenfelek header fájla
 #define ENEMY_HPP
 
 #include "entity.hpp"

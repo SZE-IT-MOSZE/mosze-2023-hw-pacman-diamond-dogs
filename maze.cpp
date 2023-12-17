@@ -1,4 +1,4 @@
-// maze.cpp
+// // labirintus generálás
 
 #include "maze.hpp"
 
