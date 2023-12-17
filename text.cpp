@@ -1,4 +1,4 @@
-#include "text.hpp"     //kiírással, illetve kiírt szöveg jellemzõivel foglalkozik
+#include "text.hpp"     //kiÃ­rÃ¡ssal, illetve kiÃ­rt szÃ¶veg jellemzÅ‘ivel foglalkozik
 
 // from stdlib
 #include <iostream>

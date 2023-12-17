@@ -1,12 +1,12 @@
-// labirintus gener·l·shoz header f·jlok
+// labirintus gener√°l√°shoz header f√°jlok
 #ifndef MAZE_HPP
 #define MAZE_HPP
 
 #include <iostream>
 #include <vector>
 
-#define GRID_WIDTH 21       //labirintus magass·ga
-#define GRID_HEIGHT 21      //labirintus szÈlessÈge
+#define GRID_WIDTH 21       //labirintus magass√°ga
+#define GRID_HEIGHT 21      //labirintus sz√©less√©ge
 #define NORTH 0
 #define EAST 1
 #define SOUTH 2

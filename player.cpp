@@ -1,4 +1,4 @@
-#include "player.hpp"       //j·tÈkos adataival foglalkozik
+#include "player.hpp"       //j√°t√©kos adataival foglalkozik
 
 
 Player::Player(SDL_Renderer* renderer, std::string path, int x, int y, int initHealth) : 

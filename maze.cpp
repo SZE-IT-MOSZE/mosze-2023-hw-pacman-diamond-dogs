@@ -1,4 +1,4 @@
-// // labirintus gener·l·s
+// // labirintus gener√°l√°s
 
 #include "maze.hpp"
 

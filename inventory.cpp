@@ -1,4 +1,4 @@
-#include "inventory.hpp"        //inventory cpp, végül nem volt idõnk ezzel foglalkozni :(
+#include "inventory.hpp"        //inventory cpp, vÃ©gÃ¼l nem volt idÅ‘nk ezzel foglalkozni :(
 
 
 Inventory::Inventory(SDL_Renderer* renderer){

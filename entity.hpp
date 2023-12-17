@@ -1,4 +1,4 @@
-#ifndef ENTITY_HPP      //entity f·jlok header-e
+#ifndef ENTITY_HPP      //entity f√°jlok header-e
 #define ENTITY_HPP
 
 // from SDL2
@@ -9,7 +9,7 @@
 #include <string>
 
 
-class Entity {              //Èleterı potik Ès kulcsok
+class Entity {              //√©leter≈ë potik √©s kulcsok
 private:
     SDL_Texture* entityTexture;
     SDL_Rect entityRect;

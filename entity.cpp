@@ -1,4 +1,4 @@
-#include "entity.hpp"       //entitik pozÌciÛj·val (kulcsok, Ès potik) foglalkozik
+#include "entity.hpp"       //entitik poz√≠ci√≥j√°val (kulcsok, √©s potik) foglalkozik
 
 
 Entity::Entity(SDL_Renderer* renderer, std::string path, int x, int y) {

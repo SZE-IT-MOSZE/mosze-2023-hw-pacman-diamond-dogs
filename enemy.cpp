@@ -1,4 +1,4 @@
-#include "enemy.hpp"    //ellenfelek adatait, illetve a mozgásuk randomizálását tartalmazza
+#include "enemy.hpp"    //ellenfelek adatait, illetve a mozgÃ¡suk randomizÃ¡lÃ¡sÃ¡t tartalmazza
 #include <cstdio>
 
 Enemy::Enemy (SDL_Renderer*& renderer, std::string path, int x, int y, int initHealth, std::string monsterName) : 
