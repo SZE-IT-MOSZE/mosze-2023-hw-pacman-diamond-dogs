@@ -1,10 +1,5 @@
-#include <player.hpp>
-const int SCREEN_W = 640;
-const int SCREEN_H = 512;
-const int TEXTURE_W = 32;
-const int TEXTURE_H = 32;
-const int ScreenOffsetX = SCREEN_W / 2;
-const int ScreenOffsetY = SCREEN_H / 2;
+#include "player.hpp"
+
 
 Player::Player(SDL_Renderer* renderer, std::string path, int x, int y, int initHealth) : 
     Entity(renderer,path, x, y),

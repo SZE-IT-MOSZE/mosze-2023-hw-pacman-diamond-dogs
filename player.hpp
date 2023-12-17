@@ -1,8 +1,10 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include <enemy.hpp>
-#include <entity.hpp>
+
+#include "enemy.hpp"
+#include "entity.hpp"
+
 
 class Player : public Entity {
     private:

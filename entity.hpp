@@ -1,16 +1,22 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
-#include <SDL.h>
+
+// from SDL2
+#include <SDL2/SDL.h>
+
+
+// from stdlib
 #include <string>
 
+
 class Entity {
-    private:
+private:
     SDL_Texture* entityTexture;
     SDL_Rect entityRect;
     int xPos;
     int yPos;
     
-    public:
+public:
     Entity(SDL_Renderer* renderer, std::string path, int x, int y);
     ~Entity();
     void RenderEntity(SDL_Renderer* renderer);
