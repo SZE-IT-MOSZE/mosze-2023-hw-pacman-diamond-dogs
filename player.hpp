@@ -1,8 +1,10 @@
-#ifndef PLAYER_HPP
+#ifndef PLAYER_HPP      ////játékos jájl header-e
 #define PLAYER_HPP
 
-#include <enemy.hpp>
-#include <entity.hpp>
+
+#include "enemy.hpp"
+#include "entity.hpp"
+
 
 class Player : public Entity {
     private:

@@ -1,9 +1,15 @@
-#ifndef INVENTORY_HPP
+#ifndef INVENTORY_HPP   //inventory header, végül nem volt idõnk ezzel foglalkozni :(
 #define INVENTORY_HPP
 
+
+#include "entity.hpp"
+
+// from stdlib
 #include <vector>
-#include <SDL.h>
-#include <entity.hpp>
+
+// from SDL2
+#include <SDL2/SDL.h>
+
 
 class Inventory {
     private:

@@ -1,11 +1,5 @@
-#include <inventory.hpp>
-#include <iostream>
-const int SCREEN_W = 640;
-const int SCREEN_H = 512;
-const int TEXTURE_W = 32;
-const int TEXTURE_H = 32;
-const int ScreenOffsetX = SCREEN_W / 2;
-const int ScreenOffsetY = SCREEN_H / 2;
+#include "inventory.hpp"        //inventory cpp, végül nem volt idõnk ezzel foglalkozni :(
+
 
 Inventory::Inventory(SDL_Renderer* renderer){
     InventoryItems.reserve(12);

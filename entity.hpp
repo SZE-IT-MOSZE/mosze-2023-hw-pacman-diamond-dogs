@@ -1,16 +1,22 @@
-#ifndef ENTITY_HPP
+#ifndef ENTITY_HPP      //entity fájlok header-e
 #define ENTITY_HPP
-#include <SDL.h>
+
+// from SDL2
+#include <SDL2/SDL.h>
+
+
+// from stdlib
 #include <string>
 
-class Entity {
-    private:
+
+class Entity {              //életerõ potik és kulcsok
+private:
     SDL_Texture* entityTexture;
     SDL_Rect entityRect;
     int xPos;
     int yPos;
     
-    public:
+public:
     Entity(SDL_Renderer* renderer, std::string path, int x, int y);
     ~Entity();
     void RenderEntity(SDL_Renderer* renderer);

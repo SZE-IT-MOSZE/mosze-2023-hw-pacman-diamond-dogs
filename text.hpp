@@ -1,9 +1,13 @@
-#ifndef TEXT_HPP
+#ifndef TEXT_HPP        //text fájl header-je
 #define TEXT_HPP
 
-#include <SDL.h>
-#include <SDL_ttf.h>
+
+// from stdlib
 #include <string>
+
+// from SDL2
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 class Text {
     private:

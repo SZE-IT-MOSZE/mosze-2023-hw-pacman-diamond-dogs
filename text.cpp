@@ -1,5 +1,8 @@
-#include <text.hpp>
+#include "text.hpp"     //kiírással, illetve kiírt szöveg jellemzõivel foglalkozik
+
+// from stdlib
 #include <iostream>
+
 
 bool Text::ttf_init = false;
 
