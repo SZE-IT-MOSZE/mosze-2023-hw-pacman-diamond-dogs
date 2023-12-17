@@ -1,5 +1,8 @@
-#include <text.hpp>
+#include "text.hpp"
+
+// from stdlib
 #include <iostream>
+
 
 bool Text::ttf_init = false;
 

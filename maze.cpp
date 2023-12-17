@@ -1,5 +1,7 @@
 // maze.cpp
-#include "maze.h"
+
+#include "maze.hpp"
+
 #include <cstdlib>
 #include <ctime>
 
